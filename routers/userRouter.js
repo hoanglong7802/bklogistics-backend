@@ -18,4 +18,10 @@ router.put('/:id', userController.updateUser);
 // Delete a user
 router.delete('/:id', userController.deleteUser);
 
+// Get user profile
+router.get('/:id', userController.getUserProfile);
+
+// Request role registration
+router.put('/:id/request-role-registration', userController.requestRoleRegistration);
+
 module.exports = router;

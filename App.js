@@ -3,6 +3,7 @@ const mongoose = require('mongoose');
 
 const userRouter = require('./routers/userRouter');
 const orderRouter = require('./routers/orderRouter');
+const productRouter = require('./routers/productRouter');
 
 // Create Express app
 const app = express();
@@ -24,6 +25,14 @@ app.use(express.json());
 // Mount router for '/api' routes
 app.use('/api/users', userRouter);
 app.use('/api/orders', orderRouter);
+app.use('/api/routers', productRouter);
+
+// Error handling middleware
+app.use((err, req, res, next) => {
+  console.error(err.stack);
+  res.status(500).json({ error: 'Internal Server Error' });
+});
+
 
 // Start the server
 app.listen(3000, () => {

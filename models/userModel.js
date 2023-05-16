@@ -4,18 +4,22 @@ const userSchema = new mongoose.Schema({
   name: {
     type: String,
     required: true,
-    maxlength: 100
+    maxLength: 100,
   },
   email: {
     type: String,
     required: true,
-    maxlength: 100,
-    unique: true
+    maxLength: 100,
   },
   age: {
     type: Number,
-    required: true
-  }
+    required: true,
+  },
+  role: {
+    type: String,
+    enum: ['member', 'supplier', 'manufacturer', 'customer'],
+    default: 'member',
+  },
 });
 
 const User = mongoose.model('User', userSchema);
