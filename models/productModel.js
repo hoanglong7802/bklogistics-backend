@@ -1,18 +1,32 @@
 const mongoose = require('mongoose');
 
 const productSchema = new mongoose.Schema({
+  id: {
+    type: Number,
+    auto:true,
+    unique: true,
+  },
   name: {
     type: String,
     required: true,
-    maxLength: 100,
+  },
+  material: [
+    {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: 'Material',
+    },
+  ],
+  description: {
+    type: String,
   },
   price: {
     type: Number,
     required: true,
   },
-  description: {
+  unit: {
     type: String,
-    maxLength: 250,
+    enum: ['kg', 'm', 'cái'],
+    required: true,
   },
 });
 

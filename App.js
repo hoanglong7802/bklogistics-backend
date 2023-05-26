@@ -4,12 +4,14 @@ const mongoose = require('mongoose');
 const userRouter = require('./routers/userRouter');
 const orderRouter = require('./routers/orderRouter');
 const productRouter = require('./routers/productRouter');
+const materialRouter = require('./routers/materialRouter');
+const shipmentRouter = require('./routers/shipmentRouter');
 
 // Create Express app
 const app = express();
 
 // Connect to MongoDB
-mongoose.connect('mongodb://localhost/mydatabase', { 
+mongoose.connect('mongodb+srv://phamlong:12112002@cluster1.pphau.mongodb.net/logistics?retryWrites=true&w=majority', { 
     useNewUrlParser: true, 
     useUnifiedTopology: true 
 });
@@ -25,7 +27,9 @@ app.use(express.json());
 // Mount router for '/api' routes
 app.use('/api/users', userRouter);
 app.use('/api/orders', orderRouter);
-app.use('/api/routers', productRouter);
+app.use('/api/products', productRouter);
+app.use('/api/materials', materialRouter);
+app.use('/api/shipments', shipmentRouter);
 
 // Error handling middleware
 app.use((err, req, res, next) => {

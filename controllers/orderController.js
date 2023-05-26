@@ -3,14 +3,15 @@ const Order = require('../models/orderModel');
 // Create a new order
 exports.createOrder = async (req, res, next) => {
   try {
-    const { productId, supplierAddress, manufacturerAddress } = req.body;
+    const { productId, suppliers, manufacturers, address, status } = req.body;
 
     // Check caller's role (implement your role checking logic here)
 
     const order = new Order({
-      productId,
-      supplierAddress,
-      manufacturerAddress,
+      suppliers,
+      manufacturers,
+      address,
+      status
     });
 
     const createdOrder = await order.save();
@@ -21,7 +22,18 @@ exports.createOrder = async (req, res, next) => {
   }
 };
 
-// Get order details
+// Get all orders
+exports.getAllOrders = async (req, res, next) => {
+  try {
+    const orders = await Order.find().exec();
+
+    res.json(orders);
+  } catch (error) {
+    next(error);
+  }
+};
+
+// Get order details by ID
 exports.getOrderById = async (req, res, next) => {
   try {
     const orderId = req.params.id;
@@ -37,58 +49,93 @@ exports.getOrderById = async (req, res, next) => {
   }
 };
 
-// Manage order (cancel or confirm)
-exports.manageOrder = async (req, res, next) => {
+// Get orders by suppliers, manufacturers, or address
+exports.getOrders = async (req, res, next) => {
   try {
-    const orderId = req.params.id;
-    const { status } = req.body;
+    const { suppliers, manufacturers, address } = req.query;
 
-    // Check caller's role and validate the confirm action (implement your role and validation logic here)
+    const query = {};
 
-    const order = await Order.findByIdAndUpdate(
-      orderId,
-      { status },
-      { new: true }
-    );
-
-    if (!order) {
-      return res.status(404).json({ error: 'Order not found' });
+    if (suppliers) {
+      query.suppliers = suppliers;
     }
 
-    res.json(order);
+    if (manufacturers) {
+      query.manufacturers = manufacturers;
+    }
+
+    if (address) {
+      query.address = address;
+    }
+
+    const orders = await Order.find(query);
+
+    res.json(orders);
   } catch (error) {
     next(error);
   }
 };
 
+// Get orders by date
+exports.getOrdersByDate = async (req, res, next) => {
+  try {
+    const startDate = new Date(req.query.startDate);
+    const endDate = new Date(req.query.endDate);
+    const orders = await Order.find({ createdDate: { $gte: startDate, $lte: endDate } });
+
+    res.json(orders);
+  } catch (error) {
+    next(error);
+  }
+};
+
+// Get orders by status
+exports.getOrdersByStatus = async (req, res, next) => {
+  try {
+    const status = req.query.status;
+    const orders = await Order.find({ status });
+
+    res.json(orders);
+  } catch (error) {
+    next(error);
+  }
+};
 
 // Update an order
-exports.updateOrder = async (req, res) => {
+exports.updateOrder = async (req, res, next) => {
   try {
-    const order = await Order.findByIdAndUpdate(req.params.id, req.body, {
-      new: true,
-    });
-    if (order) {
-      res.status(200).json(order);
-    } else {
-      res.status(404).json({ error: 'Order not found' });
+    const orderId = req.params.id;
+    const {suppliers, manufacturers, address, status } = req.body;
+
+    const updatedOrder = await Order.findByIdAndUpdate(
+      orderId,
+      {suppliers, manufacturers, address, status },
+      { new: true }
+    );
+
+    if (!updatedOrder) {
+      return res.status(404).json({ error: 'Order not found' });
     }
+
+    res.json(updatedOrder);
   } catch (error) {
-    res.status(500).json({ error: 'Failed to update the order' });
+    next(error);
   }
 };
 
 // Delete an order
-exports.deleteOrder = async (req, res) => {
+exports.deleteOrder = async (req, res, next) => {
   try {
-    const order = await Order.findByIdAndRemove(req.params.id);
-    if (order) {
-      res.status(200).json({ message: 'Order deleted successfully' });
-    } else {
-      res.status(404).json({ error: 'Order not found' });
+    const orderId = req.params.id;
+
+    const deletedOrder = await Order.findByIdAndDelete(orderId);
+
+    if (!deletedOrder) {
+      return res.status(404).json({ error: 'Order not found' });
     }
+
+    res.sendStatus(204);
   } catch (error) {
-    res.status(500).json({ error: 'Failed to delete the order' });
+    next(error);
   }
 };
-``

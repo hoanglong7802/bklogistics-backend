@@ -22,7 +22,7 @@ exports.createProduct = async (req, res, next) => {
 // Get all products
 exports.getAllProducts = async (req, res, next) => {
   try {
-    const products = await Product.find();
+    const products = await Product.find().exec();
 
     res.json(products);
   } catch (error) {
@@ -45,6 +45,28 @@ exports.getProductById = async (req, res, next) => {
     next(error);
   }
 };
+
+exports.getProducts = async (req, res, next) => {
+  try {
+    const { name, material } = req.query;
+    let query = {};
+
+    if (name) {
+      query.name = { $regex: name, $options: 'i' };
+    }
+
+    if (material) {
+      query.material = { $in: [material] };
+    }
+
+    const products = await Product.find(query).exec();
+
+    res.json(products);
+  } catch (error) {
+    next(error);
+  }
+};
+
 
 // Update a product
 exports.updateProduct = async (req, res, next) => {

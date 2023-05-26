@@ -1,84 +1,86 @@
 const User = require('../models/userModel');
 
 // Create a new user
-exports.createUser = (req, res) => {
-  const { name, email, age } = req.body;
+exports.createUser = async (req, res) => {
+  try {
+    const { name, email, age } = req.body;
 
-  const user = new User({
-    name,
-    email,
-    age
-  });
+    const user = new User({
+      name,
+      email,
+      age
+    });
 
-  user.save((err, newUser) => {
-    if (err) {
-      console.error(err);
-      res.status(500).json({ error: 'Failed to create user' });
-    } else {
-      res.status(201).json(newUser);
-    }
-  });
+    const newUser = await user.save();
+    res.status(201).json(newUser);
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ error: 'Failed to create user' });
+  }
 };
 
 // Get all users
-exports.getAllUsers = (req, res) => {
-  User.find({}, (err, users) => {
-    if (err) {
-      console.error(err);
-      res.status(500).json({ error: 'Failed to retrieve users' });
-    } else {
-      res.json(users);
-    }
-  });
+exports.getAllUsers = async (req, res) => {
+  try {
+    const users = await User.find({});
+    res.json(users);
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ error: 'Failed to retrieve users' });
+  }
 };
 
 // Get a specific user by ID
-exports.getUserById = (req, res) => {
-  const userId = req.params.id;
+exports.getUserById = async (req, res) => {
+  try {
+    const userId = req.params.id;
+    const user = await User.findById(userId);
 
-  User.findById(userId, (err, user) => {
-    if (err) {
-      console.error(err);
-      res.status(500).json({ error: 'Failed to retrieve user' });
-    } else if (!user) {
+    if (!user) {
       res.status(404).json({ error: 'User not found' });
     } else {
       res.json(user);
     }
-  });
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ error: 'Failed to retrieve user' });
+  }
 };
 
 // Update a user
-exports.updateUser = (req, res) => {
-  const userId = req.params.id;
-  const { name, email, age } = req.body;
+exports.updateUser = async (req, res) => {
+  try {
+    const userId = req.params.id;
+    const { name, email, age } = req.body;
 
-  User.findByIdAndUpdate(userId, { name, email, age }, { new: true }, (err, updatedUser) => {
-    if (err) {
-      console.error(err);
-      res.status(500).json({ error: 'Failed to update user' });
-    } else if (!updatedUser) {
+    const updatedUser = await User.findByIdAndUpdate(userId, { name, email, age }, { new: true });
+
+    if (!updatedUser) {
       res.status(404).json({ error: 'User not found' });
     } else {
       res.json(updatedUser);
     }
-  });
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ error: 'Failed to update user' });
+  }
 };
 
 // Delete a user
-exports.deleteUser = (req, res) => {
-  const userId = req.params.id;
+exports.deleteUser = async (req, res) => {
+  try {
+    const userId = req.params.id;
+    const removedUser = await User.findByIdAndRemove(userId);
 
-  User.findByIdAndRemove(userId, (err, removedUser) => {
-    if (err) {
-      console.error(err);
-      res.status(500).json({ error: 'Failed to delete user' });
-    } else if (!removedUser) {
+    if (!removedUser) {
       res.status(404).json({ error: 'User not found' });
     } else {
       res.json({ message: 'User deleted successfully' });
     }
-  });
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ error: 'Failed to delete user' });
+  }
 };
 
 // Get user profile

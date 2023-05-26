@@ -1,23 +1,37 @@
 const mongoose = require('mongoose');
 
 const orderSchema = new mongoose.Schema({
-  productId: {
-    type: mongoose.Schema.Types.ObjectId,
-    ref: 'Product',
-    required: true,
+  id: {
+    type: Number,
+    auto: true,
+    unique: true,
   },
-  supplierAddress: {
+  address: {
     type: String,
     required: true,
   },
-  manufacturerAddress: {
-    type: String,
-    required: true,
+  suppliers: [
+    {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: 'Profile',
+      required: true,
+    },
+  ],
+  manufacturers: [
+    {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: 'Profile',
+      required: true,
+    },
+  ],
+  date: {
+    type: Date,
+    default: Date.now,
   },
   status: {
-    type: String,
-    enum: ['PENDING', 'SUPPLIED', 'DELIVERING', 'SUCCESS', 'CANCELLED'],
-    default: 'PENDING',
+    type: Number,
+    enum: [0, 1, 2, 3, 4, 5],
+    default: 0,
   },
 });
 

@@ -16,9 +16,18 @@ router.get('/:id', orderController.getOrderById);
 router.put('/:id', orderController.updateOrder);
 
 // Manage order (cancel or confirm)
-router.put('/:id', orderController.manageOrder);
+router.put('/manage/:id', orderController.manageOrder);
 
 // Delete an order
 router.delete('/:id', orderController.deleteOrder);
+
+// Get orders by query (suppliers, manufacturers, or address)
+router.get('/query', orderController.getOrders);
+
+// Get orders by date
+router.get('/date', orderController.getOrdersByDate);
+
+// Get orders by status
+router.get('/status', orderController.getOrdersByStatus);
 
 module.exports = router;
