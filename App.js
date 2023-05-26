@@ -1,7 +1,7 @@
 const express = require('express');
 const mongoose = require('mongoose');
 
-const userRouter = require('./routers/userRouter');
+const profileRouter = require('./routers/profileRouter');
 const orderRouter = require('./routers/orderRouter');
 const productRouter = require('./routers/productRouter');
 const materialRouter = require('./routers/materialRouter');
@@ -25,7 +25,7 @@ app.get('/', (req, res) => {
 app.use(express.json());
 
 // Mount router for '/api' routes
-app.use('/api/users', userRouter);
+app.use('/api/profiles', profileRouter);
 app.use('/api/orders', orderRouter);
 app.use('/api/products', productRouter);
 app.use('/api/materials', materialRouter);
