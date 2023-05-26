@@ -1,24 +1,24 @@
 const express = require('express');
-const userController = require('../controllers/userController');
+const profileController = require('../controllers/profileController');
 
 const router = express.Router();
 
-// Create a new user
-router.post('/', userController.createUser);
+// Create a new profile
+router.post('/', profileController.createProfile);
 
-// Get all users
-router.get('/', userController.getAllUsers);
+// Get all profiles
+router.get('/', profileController.getAllProfiles);
 
-// Get a specific user
-router.get('/:id', userController.getUserById);
+// Get a specific profile
+router.get('/:id', profileController.getProfileById);
 
-// Update a user
-router.put('/:id', userController.updateUser);
+// Update a profile
+router.put('/:id', profileController.updateProfile);
 
-// Delete a user
-router.delete('/:id', userController.deleteUser);
+// Delete a profile
+router.delete('/:id', profileController.deleteProfile);
 
 // Request role registration
-router.put('/:id/request-role-registration', userController.requestRoleRegistration);
+router.put('/:id/request-role-registration', profileController.requestRoleRegistration);
 
 module.exports = router;

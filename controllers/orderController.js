@@ -49,6 +49,35 @@ exports.getOrderById = async (req, res, next) => {
   }
 };
 
+// Manage order (cancel or confirm)
+exports.manageOrder = async (req, res, next) => {
+  try {
+    const orderId = req.params.id;
+    const { status } = req.body;
+
+
+    const allowedStatus = ['PENDING', 'SUPPLIED', 'DELIVERING', 'SUCCESS', 'FAILED', 'CANCELLED'];
+    if (!allowedStatus.includes(status)) {
+      return res.status(400).json({ error: 'Invalid status value' });
+    }
+
+    const order = await Order.findByIdAndUpdate(
+      orderId,
+      { status },
+      { new: true }
+    );
+
+    if (!order) {
+      return res.status(404).json({ error: 'Order not found' });
+    }
+
+    res.json(order);
+  } catch (error) {
+    next(error);
+  }
+};
+
+
 // Get orders by suppliers, manufacturers, or address
 exports.getOrders = async (req, res, next) => {
   try {
