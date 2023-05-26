@@ -25,7 +25,7 @@ const productSchema = new mongoose.Schema({
   },
   unit: {
     type: String,
-    enum: ['kg', 'm', 'cái'],
+    enum: ['kg', 'm'],
     required: true,
   },
 });
