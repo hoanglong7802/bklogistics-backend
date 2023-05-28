@@ -1,22 +1,24 @@
 const faker = require('faker');
+const mongoose = require('mongoose');
 const Material = require('./models/materialModel');
 const Product = require('./models/productModel');
 const Shipment = require('./models/shipmentModel');
 const Profile = require('./models/profileModel');
 const Order = require('./models/orderModel');
+const { ObjectId } = mongoose.Types;
 
 // Function to generate fake orders
 const generateFakeOrders = async (count) => {
     const orders = [];
   
     for (let i = 0; i < count; i++) {
-      const productId = faker.random.number();
+      const address = faker.address.streetAddress();
       const supplierAddress = faker.address.streetAddress();
       const manufacturerAddress = faker.address.streetAddress();
-      const status = faker.random.arrayElement(['PENDING', 'SUPPLIED', 'DELIVERING', 'SUCCESS', 'FAILED', 'CANCELLED']);
+      const status = faker.random.arrayElement([0, 1, 2, 3, 4, 5]);
   
       const order = new Order({
-        productId,
+        address,
         supplierAddress,
         manufacturerAddress,
         status
@@ -36,7 +38,7 @@ const generateFakeMaterials = async (count) => {
 
   for (let i = 0; i < count; i++) {
     const name = faker.commerce.productName();
-    const unit = faker.random.arrayElement(['kg', 'm', 'cái']);
+    const unit = faker.random.arrayElement(['kg', 'm']);
 
     const material = new Material({
       name,
@@ -61,7 +63,8 @@ const generateFakeProducts = async (count) => {
 
     const product = new Product({
       name,
-      price
+      price,
+      unit
     });
 
     products.push(product);
@@ -76,13 +79,13 @@ const generateFakeShipments = async (count) => {
   const shipments = [];
 
   for (let i = 0; i < count; i++) {
-    const orderId = faker.random.number();
-    const sender = faker.address.streetAddress();
-    const carrier = faker.address.streetAddress();
-    const receiver = faker.address.streetAddress();
+    const orderId = faker.datatype.number();
+    const sender = new ObjectId();
+    const carrier = new ObjectId();
+    const receiver = new ObjectId();
     const pickupDate = faker.date.future();
     const deliveryDate = faker.date.future();
-    const status = faker.random.arrayElement(['NOT_STARTED', 'IN_PROGRESS', 'DELIVERED']);
+    const status = faker.random.arrayElement([0, 1, 2]);
 
     const shipment = new Shipment({
       orderId,
@@ -108,20 +111,17 @@ const generateFakeProfiles = async (count) => {
   for (let i = 0; i < count; i++) {
     const address = faker.address.streetAddress();
     const name = faker.name.findName();
-    const isMember = faker.random.boolean();
+    const isMember = faker.datatype.boolean();
     const mail = faker.internet.email();
     const registerDate = faker.date.past();
-    const materialSupply = [faker.random.number(), faker.random.number()];
-    const productManufacture = [faker.random.number(), faker.random.number()];
+
 
     const profile = new Profile({
       address,
       name,
       isMember,
       mail,
-      registerDate,
-      materialSupply,
-      productManufacture
+      registerDate
     });
 
     profiles.push(profile);
@@ -133,7 +133,7 @@ const generateFakeProfiles = async (count) => {
 
 // Usage: Generate fake data for each model
 generateFakeMaterials(10);
+generateFakeProfiles(10);
 generateFakeProducts(10);
 generateFakeShipments(10);
-generateFakeProfiles(10);
 generateFakeOrders(10);

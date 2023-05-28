@@ -1,5 +1,6 @@
 const express = require('express');
 const mongoose = require('mongoose');
+const https = require("https");
 
 const profileRouter = require('./routers/profileRouter');
 const orderRouter = require('./routers/orderRouter');
@@ -15,6 +16,7 @@ mongoose.connect('mongodb+srv://phamlong:12112002@cluster1.pphau.mongodb.net/log
     useNewUrlParser: true, 
     useUnifiedTopology: true 
 });
+
 const db = mongoose.connection;
 
 app.get('/', (req, res) => {
@@ -32,7 +34,7 @@ app.use('/api/materials', materialRouter);
 app.use('/api/shipments', shipmentRouter);
 
 // Error handling middleware
-app.use((err, req, res, next) => {
+app.use(async (err, req, res, next) => {
   console.error(err.stack);
   res.status(500).json({ error: 'Internal Server Error' });
 });

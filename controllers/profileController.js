@@ -5,6 +5,8 @@ exports.createProfile = async (req, res, next) => {
   try {
     const { address, name, isMember, mail, materialSupply, productManufacture } = req.body;
 
+    console.log(req);
+
     const profile = new Profile({
       address,
       name,

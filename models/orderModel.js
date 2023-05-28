@@ -31,6 +31,7 @@ const orderSchema = new mongoose.Schema({
   status: {
     type: Number,
     enum: [0, 1, 2, 3, 4, 5],
+    //['PENDING', 'SUPPLIED', 'DELIVERING', 'SUCCESS', 'FAILED', 'CANCELLED']
     default: 0,
   },
 });

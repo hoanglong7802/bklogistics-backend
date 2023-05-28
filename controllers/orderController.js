@@ -56,7 +56,7 @@ exports.manageOrder = async (req, res, next) => {
     const { status } = req.body;
 
 
-    const allowedStatus = ['PENDING', 'SUPPLIED', 'DELIVERING', 'SUCCESS', 'FAILED', 'CANCELLED'];
+    const allowedStatus = [0, 1, 2, 3, 4, 5];
     if (!allowedStatus.includes(status)) {
       return res.status(400).json({ error: 'Invalid status value' });
     }
