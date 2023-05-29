@@ -9,11 +9,11 @@ router.post('/', productController.createProduct);
 // Get all products
 router.get('/', productController.getAllProducts);
 
+// Get a product
+router.get('/query', productController.getProducts);
+
 // Get a specific product
 router.get('/:id', productController.getProductById);
-
-// Get a product
-router.get('/:id', productController.getProducts);
 
 // Update a product
 router.put('/:id', productController.updateProduct);

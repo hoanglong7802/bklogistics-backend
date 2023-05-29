@@ -1,4 +1,5 @@
 const Product = require('../models/productModel');
+const mongoose = require('mongoose');
 
 // Create a new product
 exports.createProduct = async (req, res, next) => {
@@ -16,6 +17,7 @@ exports.createProduct = async (req, res, next) => {
 
     res.status(201).json(savedProduct);
   } catch (error) {
+    res.send(error);
     next(error);
   }
 };
@@ -35,6 +37,11 @@ exports.getAllProducts = async (req, res, next) => {
 exports.getProductById = async (req, res, next) => {
   try {
     const productId = req.params.id;
+
+    if (!mongoose.Types.ObjectId.isValid(productId)) {
+      return res.status(400).json({ error: 'Invalid product ID'});
+    }
+
     const product = await Product.findById(productId);
 
     if (!product) {
@@ -46,6 +53,7 @@ exports.getProductById = async (req, res, next) => {
     next(error);
   }
 };
+
 
 exports.getProducts = async (req, res, next) => {
   try {

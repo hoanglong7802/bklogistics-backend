@@ -3,7 +3,7 @@ const Order = require('../models/orderModel');
 // Create a new order
 exports.createOrder = async (req, res, next) => {
   try {
-    const { productId, suppliers, manufacturers, address, status } = req.body;
+    const {suppliers, manufacturers, address, status } = req.body;
 
     // Check caller's role (implement your role checking logic here)
 
