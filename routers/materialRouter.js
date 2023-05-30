@@ -9,6 +9,9 @@ router.post('/', materialController.createMaterial);
 // Get all materials
 router.get('/', materialController.getAllMaterials);
 
+// Get materials by fields
+router.get('/query', materialController.getMaterials);
+
 // Get a specific material
 router.get('/:id', materialController.getMaterialById);
 

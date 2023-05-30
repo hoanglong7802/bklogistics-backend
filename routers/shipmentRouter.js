@@ -9,6 +9,9 @@ router.post('/', shipmentController.createShipment);
 // Get all shipments
 router.get('/', shipmentController.getAllShipments);
 
+// Get a shipment by query
+router.get('/query', shipmentController.getShipments);
+
 // Get a specific shipment
 router.get('/:id', shipmentController.getShipmentById);
 

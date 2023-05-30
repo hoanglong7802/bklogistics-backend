@@ -29,6 +29,24 @@ exports.getAllMaterials = async (req, res, next) => {
   }
 };
 
+exports.getMaterials = async (req, res, next) => {
+  try {
+    const query = { ...req.query };
+
+    delete query._id;
+
+    if (Object.keys(query).length == 0) {
+      query = {}
+    }
+
+    const materials = await Material.find(query).exec();
+
+    res.json(materials);
+  } catch (error) {
+    next(error);
+  }
+};
+
 // Get a specific material
 exports.getMaterialById = async (req, res, next) => {
   try {

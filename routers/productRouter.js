@@ -9,7 +9,7 @@ router.post('/', productController.createProduct);
 // Get all products
 router.get('/', productController.getAllProducts);
 
-// Get a product
+// Get a product by query 
 router.get('/query', productController.getProducts);
 
 // Get a specific product

@@ -81,7 +81,7 @@ exports.manageOrder = async (req, res, next) => {
 // Get orders by suppliers, manufacturers, or address
 exports.getOrders = async (req, res, next) => {
   try {
-    const { suppliers, manufacturers, address } = req.query;
+    const { suppliers, manufacturers, address, date, status } = req.query;
 
     const query = {};
 
@@ -97,7 +97,15 @@ exports.getOrders = async (req, res, next) => {
       query.address = address;
     }
 
-    const orders = await Order.find(query);
+    if (date) {
+      query.date = date;
+    }
+
+    if (status) {
+      query.status = status;
+    }
+
+    const orders = await Order.find(query).exec();
 
     res.json(orders);
   } catch (error) {
@@ -105,30 +113,7 @@ exports.getOrders = async (req, res, next) => {
   }
 };
 
-// Get orders by date
-exports.getOrdersByDate = async (req, res, next) => {
-  try {
-    const startDate = new Date(req.query.startDate);
-    const endDate = new Date(req.query.endDate);
-    const orders = await Order.find({ createdDate: { $gte: startDate, $lte: endDate } });
 
-    res.json(orders);
-  } catch (error) {
-    next(error);
-  }
-};
-
-// Get orders by status
-exports.getOrdersByStatus = async (req, res, next) => {
-  try {
-    const status = req.query.status;
-    const orders = await Order.find({ status });
-
-    res.json(orders);
-  } catch (error) {
-    next(error);
-  }
-};
 
 // Update an order
 exports.updateOrder = async (req, res, next) => {

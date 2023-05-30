@@ -33,6 +33,19 @@ exports.getAllShipments = async (req, res, next) => {
   }
 };
 
+exports.getShipments = async (req, res, next) => {
+  try {
+    const query = { ...req.query };
+    delete query._id;
+
+    const shipments = await Shipment.find(query);
+
+    res.json(shipments);
+  } catch (error) {
+    next(error);
+  }
+};
+
 // Get a specific shipment
 exports.getShipmentById = async (req, res, next) => {
   try {

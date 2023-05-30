@@ -35,6 +35,23 @@ exports.getAllProfiles = async (req, res, next) => {
   }
 };
 
+exports.getProfiles = async (req, res, next) => {
+  try {
+    const query = { ...req.query };
+    delete query._id;
+
+    if (Object.keys(query).length == 0) {
+      query = {}
+    }
+
+    const profiles = await Profile.find(query).exec();
+
+    res.json(profiles);
+  } catch (error) {
+    next(error);
+  }
+};
+
 // Get a specific profile
 exports.getProfileById = async (req, res, next) => {
   try {
