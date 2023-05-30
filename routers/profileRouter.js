@@ -6,11 +6,8 @@ const router = express.Router();
 // Create a new profile
 router.post('/', profileController.createProfile);
 
-// Get all profiles
-router.get('/', profileController.getAllProfiles);
-
 // Get a profile by query
-router.get('/query', profileController.getProfiles);
+router.get('/', profileController.getProfiles);
 
 // Get a specific profile
 router.get('/:id', profileController.getProfileById);
