@@ -1,6 +1,7 @@
 const express = require('express');
 const mongoose = require('mongoose');
 const https = require("https");
+const swaggerConfig = require('./swagger');
 
 const profileRouter = require('./routers/profileRouter');
 const orderRouter = require('./routers/orderRouter');
@@ -39,6 +40,7 @@ app.use(async (err, req, res, next) => {
   res.status(500).json({ error: 'Internal Server Error' });
 });
 
+swaggerConfig(app);
 
 // Start the server
 app.listen(3000, () => {
