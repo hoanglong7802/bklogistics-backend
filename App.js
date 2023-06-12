@@ -1,6 +1,7 @@
 const express = require('express');
 const mongoose = require('mongoose');
-const https = require("https");
+const http = require("http");
+const socketIO = require('socket.io');
 const swaggerConfig = require('./swagger');
 
 const profileRouter = require('./routers/profileRouter');
@@ -12,6 +13,8 @@ const notificationRouter = require('./routers/notificationRouter');
 
 // Create Express app
 const app = express();
+const server = http.createServer(app);
+const io = socketIO(server);
 
 // Connect to MongoDB
 mongoose.connect('mongodb+srv://phamlong:12112002@cluster1.pphau.mongodb.net/logistics?retryWrites=true&w=majority', { 
