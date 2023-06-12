@@ -8,6 +8,7 @@ const orderRouter = require('./routers/orderRouter');
 const productRouter = require('./routers/productRouter');
 const materialRouter = require('./routers/materialRouter');
 const shipmentRouter = require('./routers/shipmentRouter');
+const notificationRouter = require('./routers/notificationRouter');
 
 // Create Express app
 const app = express();
@@ -33,6 +34,7 @@ app.use('/api/orders', orderRouter);
 app.use('/api/products', productRouter);
 app.use('/api/materials', materialRouter);
 app.use('/api/shipments', shipmentRouter);
+app.use('/api/notis', notificationRouter);
 
 // Error handling middleware
 app.use(async (err, req, res, next) => {
@@ -41,6 +43,15 @@ app.use(async (err, req, res, next) => {
 });
 
 swaggerConfig(app);
+
+io.on('connection', (socket) => {
+  console.log('A client connected');
+
+  // Handle disconnect event
+  socket.on('disconnect', () => {
+    console.log('A client disconnected');
+  });
+});
 
 // Start the server
 app.listen(3000, () => {
