@@ -31,7 +31,7 @@ exports.getAllMaterials = async (req, res, next) => {
 
 exports.getMaterials = async (req, res, next) => {
   try {
-    const query = { ...req.query };
+    let query = { ...req.query };
 
     delete query._id;
 
