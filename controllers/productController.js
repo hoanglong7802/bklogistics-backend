@@ -4,13 +4,12 @@ const mongoose = require('mongoose');
 // Create a new product
 exports.createProduct = async (req, res, next) => {
   try {
-    const { name, price, description, unit } = req.body;
+    const { name, required_material, description } = req.body;
 
     const product = new Product({
       name,
-      price,
+      required_material,
       description,
-      unit
     });
 
     const savedProduct = await product.save();
@@ -57,15 +56,19 @@ exports.getProductById = async (req, res, next) => {
 
 exports.getProducts = async (req, res, next) => {
   try {
-    const { name, material } = req.query;
+    const { name, required_material, description } = req.query;
     let query = {};
 
     if (name) {
       query.name = { $regex: name, $options: 'i' };
     }
 
-    if (material) {
+    if (required_material) {
       query.material = { $in: [material] };
+    }
+
+    if (description) {
+      query.description = { $regex: description, $options: 'i' };
     }
 
     const products = await Product.find(query).exec();
@@ -81,11 +84,11 @@ exports.getProducts = async (req, res, next) => {
 exports.updateProduct = async (req, res, next) => {
   try {
     const productId = req.params.id;
-    const { name, price, description } = req.body;
+    const { name, required_material, description } = req.body;
 
     const updatedProduct = await Product.findByIdAndUpdate(
       productId,
-      { name, price, description },
+      { name, required_material, description },
       { new: true }
     );
 

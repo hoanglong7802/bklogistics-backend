@@ -3,17 +3,19 @@ const Profile = require('../models/profileModel');
 // Create a new profile
 exports.createProfile = async (req, res, next) => {
   try {
-    const { address, name, isMember, mail, materialSupply, productManufacture } = req.body;
+    const { wallet_address, name, email, contact_address, phone_number, listed_materials, listed_products, registered_date } = req.body;
 
     console.log(req);
 
     const profile = new Profile({
-      address,
+      wallet_address,
       name,
-      isMember,
-      mail,
-      materialSupply,
-      productManufacture,
+      email,
+      contact_address,
+      phone_number,
+      listed_materials,
+      listed_products,
+      registered_date,
     });
 
     const createdProfile = await profile.save();
@@ -72,11 +74,11 @@ exports.getProfileById = async (req, res, next) => {
 exports.updateProfile = async (req, res, next) => {
   try {
     const profileId = req.params.id;
-    const { address, name, isMember, mail, materialSupply, productManufacture } = req.body;
+    const { wallet_address, name, email, contact_address, phone_number, listed_materials, listed_products, registered_date} = req.body;
 
     const updatedProfile = await Profile.findByIdAndUpdate(
       profileId,
-      { address, name, isMember, mail, materialSupply, productManufacture },
+      { wallet_address, name, email, contact_address, phone_number, listed_materials, listed_products, registered_date },
       { new: true }
     );
 

@@ -2,7 +2,7 @@ const mongoose = require('mongoose');
 
 const shipmentSchema = new mongoose.Schema({
   orderId: {
-    type: Number,
+    type: mongoose.Schema.Types.ObjectId,
     required: true,
   },
   sender: {
@@ -20,11 +20,11 @@ const shipmentSchema = new mongoose.Schema({
     ref: 'Profile',
     required: true,
   },
-  pickupDate: {
+  pickup_date: {
     type: Date,
     required: true,
   },
-  deliveryDate: {
+  delivery_date: {
     type: Date,
     required: true,
   },

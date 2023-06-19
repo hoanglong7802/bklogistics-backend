@@ -1,36 +1,39 @@
 const mongoose = require('mongoose');
 
 const profileSchema = new mongoose.Schema({
-  address: {
+  wallet_address: {
     type: String,
-    required: true,
-    maxLength: 100,
+    unique: true
   },
   name: {
     type: String,
     required: true,
-    maxLength: 100,
   },
-  isMember: {
-    type: Boolean,
-    default: false,
+  email: {
+    type: String
   },
-  mail: {
-    type: String,
-    required: true,
+  contact_address: {
+    type: String
   },
+  phone_number: {
+    type: Number
+  },
+  listed_materials: [
+    {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: 'Material',
+    },
+  ],
+  listed_products: [
+    {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: 'Product',
+    },
+  ],
   registerDate: {
     type: Date,
     default: Date.now,
   },
-  materialSupply: [{
-    type: mongoose.Schema.Types.ObjectId,
-    ref: 'Material',
-  }],
-  productManufacture: [{
-    type: mongoose.Schema.Types.ObjectId,
-    ref: 'Product',
-  }],
 });
 
 const Profile = mongoose.model('Profile', profileSchema);

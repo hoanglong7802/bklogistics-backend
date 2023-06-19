@@ -3,7 +3,7 @@ const Material = require('../models/materialModel');
 // Create a new material
 exports.createMaterial = async (req, res, next) => {
   try {
-    const { name, unit } = req.body;
+    const { name} = req.body;
 
     const material = new Material({
       name,
@@ -67,11 +67,11 @@ exports.getMaterialById = async (req, res, next) => {
 exports.updateMaterial = async (req, res, next) => {
   try {
     const materialId = req.params.id;
-    const { name, unit } = req.body;
+    const { name} = req.body;
 
     const updatedMaterial = await Material.findByIdAndUpdate(
       materialId,
-      { name, unit },
+      { name},
       { new: true }
     );
 
