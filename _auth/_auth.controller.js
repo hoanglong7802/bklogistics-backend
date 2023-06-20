@@ -3,6 +3,7 @@ const saltRounds = 10;
 const User = require("../models/userModel");
 const { generateAccessToken, generateRefreshToken } = require("../utils/index");
 const jwt = require("jsonwebtoken");
+const { ethers } = require("ethers");
 
 module.exports = {
 	register: async (req, res) => {
@@ -38,37 +39,67 @@ module.exports = {
 		}
 	},
 	login: async (req, res) => {
-		// try {
-		const inputPassword = req.body.password;
-		const matchedUser = await User.findOne({
-			walletAddress: req.body.walletAddress,
-		});
-		if (!matchedUser) throw { status: 401, message: "Address not exists" };
-		const matchedPassword = await bcrypt.compareSync(
-			inputPassword,
-			matchedUser.passwordHash
+		const { nonce, signature, walletAddress } = req.body;
+		let accessToken, refreshToken;
+		const verified = await ethers.verifyMessage(
+			// `${process.env.VERIFY_STRING}${nonce} with ${walletAddress}`,
+			`${process.env.VERIFY_STRING}:${nonce}`,
+			signature
 		);
-		if (!matchedPassword) {
-			throw { status: 401, message: "Wrong password" };
+		if (verified == walletAddress) {
+			const matchedUser = await User.findOne({
+				walletAddress: req.body.walletAddress,
+			});
+			if (matchedUser) {
+				accessToken = generateAccessToken({
+					nonce,
+					signature,
+					walletAddress,
+					isAdmin: true,
+				});
+				refreshToken = generateRefreshToken({
+					nonce,
+					signature,
+					walletAddress,
+					isAdmin: true,
+				});
+			} else {
+				accessToken = generateAccessToken({
+					nonce,
+					signature,
+					walletAddress,
+					isAdmin: false,
+				});
+				refreshToken = generateRefreshToken({
+					nonce,
+					signature,
+					walletAddress,
+					isAdmin: false,
+				});
+			}
+			return res.status(200).json({
+				status: "Successfully",
+				jwt: accessToken,
+				refreshToken: refreshToken,
+			});
+		} else {
+			return res
+				.status(500)
+				.json({ status: "Failed", message: "Signature is not valid" });
 		}
-		const accessToken = generateAccessToken({
-			walletAddress: matchedUser.walletAddress,
-			role: matchedUser.role,
+	},
+	checkAdmin: async (req, res) => {
+		const token = req.body.jwt;
+		jwt.verify(token, process.env.ACCESS_TOKEN_SECRET, (err, user) => {
+			if (err)
+				return res.status(403).json({ message: "Failed", error: err.message });
+
+			return res.json({
+				message: "Success",
+				isAdmin: user.isAdmin,
+				jwt: token,
+			});
 		});
-		const refreshToken = generateRefreshToken({
-			walletAddress: matchedUser.walletAddress,
-			role: matchedUser.role,
-		});
-		return res.status(200).json({
-			status: "Successfully",
-			jwt: accessToken,
-			refreshToken: refreshToken,
-		});
-		// } catch (err) {
-		// 	return res
-		// 		.status(err.status || 500)
-		// 		.json({ status: "Failed", message: err.message });
-		// }
 	},
 	refresh: async (req, res) => {
 		const refreshToken = req.body.refreshToken;

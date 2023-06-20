@@ -73,7 +73,7 @@ io.on("connection", (socket) => {
 });
 
 // Start the server
-PORT = 3000;
+PORT = 3001;
 server.listen(PORT, () => {
 	console.log("Server is running on http://localhost:3000");
 });
