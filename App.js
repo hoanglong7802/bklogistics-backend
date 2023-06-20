@@ -1,3 +1,4 @@
+require("dotenv").config();
 const express = require("express");
 const mongoose = require("mongoose");
 const http = require("http");
@@ -11,6 +12,7 @@ const materialRouter = require("./routers/materialRouter");
 const shipmentRouter = require("./routers/shipmentRouter");
 const notificationRouter = require("./routers/notificationRouter");
 const requestRouter = require("./routers/requestRouter");
+const _authRouter = require("./_auth/_auth.router");
 
 // Create Express app
 const app = express();
@@ -54,6 +56,7 @@ app.use("/api/materials", materialRouter);
 app.use("/api/shipments", shipmentRouter);
 app.use("/api/notis", notificationRouter);
 app.use("/api/request", requestRouter);
+app.use("/api/auth", _authRouter);
 
 // Error handling middleware
 app.use(async (err, req, res, next) => {

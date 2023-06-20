@@ -11,7 +11,6 @@ exports.createProfile = async (req, res, next) => {
 		phoneNumber,
 		description,
 	} = req.body;
-	console.log(req.body);
 	try {
 		const profile = new Profile({
 			walletAddress: walletAddress,
