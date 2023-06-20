@@ -31,13 +31,10 @@ app.use(
 app.use(cors());
 
 // Connect to MongoDB
-mongoose.connect(
-	"mongodb+srv://phamlong:12112002@cluster1.pphau.mongodb.net/logistics?retryWrites=true&w=majority",
-	{
-		useNewUrlParser: true,
-		useUnifiedTopology: true,
-	}
-);
+mongoose.connect(process.env.MONGO_URI, {
+	useNewUrlParser: true,
+	useUnifiedTopology: true,
+});
 
 const db = mongoose.connection;
 
@@ -76,7 +73,7 @@ io.on("connection", (socket) => {
 });
 
 // Start the server
-PORT = 3001;
+PORT = 3000;
 server.listen(PORT, () => {
 	console.log("Server is running on http://localhost:3000");
 });
