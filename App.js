@@ -1,6 +1,7 @@
 const express = require('express');
 const mongoose = require('mongoose');
 const https = require("https");
+const cors = require("cors");
 const swaggerConfig = require('./swagger');
 
 const profileRouter = require('./routers/profileRouter');
@@ -26,7 +27,7 @@ app.get('/', (req, res) => {
 
 // Parse JSON bodies
 app.use(express.json());
-
+app.use(cors());
 // Mount router for '/api' routes
 app.use('/api/profiles', profileRouter);
 app.use('/api/orders', orderRouter);
@@ -43,6 +44,6 @@ app.use(async (err, req, res, next) => {
 swaggerConfig(app);
 
 // Start the server
-app.listen(3000, () => {
-  console.log('Server is running on http://localhost:3000');
+app.listen(3001, () => {
+  console.log('Server is running on http://localhost:3001');
 });
