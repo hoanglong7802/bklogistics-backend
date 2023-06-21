@@ -13,6 +13,7 @@ const shipmentRouter = require("./routers/shipmentRouter");
 const notificationRouter = require("./routers/notificationRouter");
 const requestRouter = require("./routers/requestRouter");
 const _authRouter = require("./_auth/_auth.router");
+const updateRouter = require("./routers/updateRouter");
 
 // Create Express app
 const app = express();
@@ -54,6 +55,7 @@ app.use("/api/shipments", shipmentRouter);
 app.use("/api/notis", notificationRouter);
 app.use("/api/request", requestRouter);
 app.use("/api/auth", _authRouter);
+app.use("/api/update", updateRouter);
 
 // Error handling middleware
 app.use(async (err, req, res, next) => {
