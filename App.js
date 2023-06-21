@@ -50,7 +50,6 @@ swaggerConfig(app);
 io.on('connection', (socket) => {
   console.log('A client connected');
 
-  // Handle disconnect event
   socket.on('disconnect', () => {
     console.log('A client disconnected');
   });
