@@ -46,9 +46,7 @@ mongoose.connect(process.env.MONGO_URI, {
 
 const db = mongoose.connection;
 
-app.get("/", (req, res) => {
-  res.sendFile(__dirname + "/index.html");
-});
+
 
 // Parse JSON bodies
 app.use(express.json());
@@ -65,6 +63,9 @@ app.use("/api/required-material", requiredMaterialRouter);
 app.use("/api/request", requestRouter);
 app.use("/api/auth", _authRouter);
 app.use("/api/update", updateRouter);
+app.get("/", (req, res) => {
+	res.sendFile(__dirname + "/index.html");
+});
 
 // Error handling middleware
 app.use(async (err, req, res, next) => {
@@ -82,6 +83,9 @@ io.on("connection", (socket) => {
 
     // Emit a response event back to the client
     socket.emit("responseEvent", "Server says hello!");
+  });
+  socket.on("/api/notis/", () => {
+    socket.emit("message", "OK");
   });
   socket.on("disconnect", () => {
     console.log("A client disconnected");
