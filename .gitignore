@@ -6,6 +6,7 @@
 # testing
 /coverage
 opp.js
+fake_data.js
 
 # production
 /build
