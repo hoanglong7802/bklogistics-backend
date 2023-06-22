@@ -5,7 +5,7 @@ exports.getNotification = async (req, res) => {
         
         const message = "OK";
 
-        req.io.emit('message', message);
+        req.io.socket.emit('message', message);
 
         res.json({message: message});
 
