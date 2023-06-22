@@ -3,15 +3,16 @@ const Shipment = require('../models/shipmentModel');
 // Create a new shipment
 exports.createShipment = async (req, res, next) => {
   try {
-    const { orderId, sender, carrier, receiver, pickupDate, deliveryDate } = req.body;
+    const { orderId, sender, carrier, receiver, pickup_date, delivery_date , status } = req.body;
 
     const shipment = new Shipment({
       orderId,
       sender,
       carrier,
       receiver,
-      pickupDate,
-      deliveryDate,
+      pickup_date,
+      delivery_date,
+      status,
     });
 
     const createdShipment = await shipment.save();
@@ -25,7 +26,7 @@ exports.createShipment = async (req, res, next) => {
 // Get all shipments
 exports.getAllShipments = async (req, res, next) => {
   try {
-    const shipments = await Shipment.find().exec();
+    const shipments = await Shipment.find();
 
     res.json(shipments);
   } catch (error) {
@@ -66,11 +67,11 @@ exports.getShipmentById = async (req, res, next) => {
 exports.updateShipment = async (req, res, next) => {
   try {
     const shipmentId = req.params.id;
-    const { orderId, sender, carrier, receiver, pickupDate, deliveryDate } = req.body;
+    const { orderId, sender, carrier, receiver, pickup_date, delivery_date , status} = req.body;
 
     const updatedShipment = await Shipment.findByIdAndUpdate(
       shipmentId,
-      { orderId, sender, carrier, receiver, pickupDate, deliveryDate },
+      {  orderId, sender, carrier, receiver, pickup_date, delivery_date , status },
       { new: true }
     );
 

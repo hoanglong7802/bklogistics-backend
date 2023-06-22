@@ -1,30 +1,16 @@
 const mongoose = require('mongoose');
 
 const orderSchema = new mongoose.Schema({
-  id: {
+  order_id: {
     type: Number,
-    auto: true,
-    unique: true,
+    require: true,
   },
-  address: {
-    type: String,
-    required: true,
+  product_id: {
+    type: Number,
+    require: true,
   },
-  suppliers: [
-    {
-      type: mongoose.Schema.Types.ObjectId,
-      ref: 'Profile',
-      required: true,
-    },
-  ],
-  manufacturers: [
-    {
-      type: mongoose.Schema.Types.ObjectId,
-      ref: 'Profile',
-      required: true,
-    },
-  ],
-  date: {
+  
+  created_date: {
     type: Date,
     default: Date.now,
   },
@@ -34,6 +20,18 @@ const orderSchema = new mongoose.Schema({
     //['PENDING', 'SUPPLIED', 'DELIVERING', 'SUCCESS', 'FAILED', 'CANCELLED']
     default: 0,
   },
+  is_paid:{
+    type: Boolean,
+    default: false
+  },
+  deposit_amount: {
+    type: Number,
+    default: 0,
+  },
+  customer_address: {
+    type: String,
+    require: true,
+  }
 });
 
 const Order = mongoose.model('Order', orderSchema);

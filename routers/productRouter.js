@@ -198,27 +198,26 @@
  *           enum: [kg, m]
  */
 
-
-
-
-const express = require('express');
-const productController = require('../controllers/productController');
+const express = require("express");
+const productController = require("../controllers/productController");
 
 const router = express.Router();
 
-// Create a new product
-router.post('/', productController.createProduct);
+router.get("/update-product-on-chain", productController.updateProductOnChain);
 
-// Get a product by query 
-router.get('/', productController.getProducts);
+// Create a new product
+router.post("/", productController.createProduct);
+
+// Get a product by query
+router.get("/:chainId", productController.getProducts);
 
 // Get a specific product
-router.get('/:id', productController.getProductById);
+router.get("/:id", productController.getProductById);
 
 // Update a product
-router.put('/:id', productController.updateProduct);
+router.put("/:id", productController.updateProduct);
 
 // Delete a product
-router.delete('/:id', productController.deleteProduct);
+router.delete("/:id", productController.deleteProduct);
 
 module.exports = router;

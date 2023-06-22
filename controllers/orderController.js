@@ -3,15 +3,17 @@ const Order = require('../models/orderModel');
 // Create a new order
 exports.createOrder = async (req, res, next) => {
   try {
-    const {suppliers, manufacturers, address, status } = req.body;
+    const {product_id, created_date, is_paid, deposit_amount, customer_address, status} = req.body;
 
     // Check caller's role (implement your role checking logic here)
 
     const order = new Order({
-      suppliers,
-      manufacturers,
-      address,
-      status
+      product_id, 
+      created_date, 
+      is_paid, 
+      deposit_amount, 
+      customer_address, 
+      status,
     });
 
     const createdOrder = await order.save();
@@ -81,24 +83,28 @@ exports.manageOrder = async (req, res, next) => {
 // Get orders by suppliers, manufacturers, or address
 exports.getOrders = async (req, res, next) => {
   try {
-    const { suppliers, manufacturers, address, date, status } = req.query;
+    const { product_id, created_date, is_paid, deposit_amount, customer_address, status } = req.query;
 
     const query = {};
 
-    if (suppliers) {
-      query.suppliers = suppliers;
+    if (product_id) {
+      query.product_id = product_id;
     }
 
-    if (manufacturers) {
-      query.manufacturers = manufacturers;
+    if (created_date) {
+      query.created_date = created_date;
     }
 
-    if (address) {
-      query.address = address;
+    if (is_paid) {
+      query.is_paid = is_paid;
     }
 
-    if (date) {
-      query.date = date;
+    if (deposit_amount) {
+      query.deposit_amount = deposit_amount;
+    }
+
+    if (customer_address) {
+      query.customer_address = customer_address;
     }
 
     if (status) {

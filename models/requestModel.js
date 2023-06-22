@@ -1,6 +1,6 @@
 const mongoose = require("mongoose");
 
-const profileSchema = new mongoose.Schema({
+const requestSchema = new mongoose.Schema({
 	walletAddress: {
 		type: String,
 		unique: true,
@@ -10,12 +10,6 @@ const profileSchema = new mongoose.Schema({
 		required: true,
 	},
 	email: {
-		type: String,
-	},
-	image: {
-		type: String,
-	},
-	website: {
 		type: String,
 	},
 	shippingAddress: {
@@ -30,29 +24,27 @@ const profileSchema = new mongoose.Schema({
 	profileImage: {
 		type: String,
 	},
+	website: {
+		type: String,
+	},
+	haveSBT: {
+		type: Boolean,
+		default: false,
+	},
+	status: {
+		type: String,
+		enum: ["pending", "verified", "rejected"],
+		default: "pending",
+	},
 	description: {
 		type: String,
 	},
-	listedMaterials: [
-		{
-			materialId: {
-				type: Number,
-			}
-		},
-	],
-	listedProducts: [
-		{
-			productId: {
-				type: Number,
-			}
-		},
-	],
 	registerDate: {
 		type: Date,
 		default: Date.now,
 	},
 });
 
-const Profile = mongoose.model("Profile", profileSchema);
+const Request = mongoose.model("Request", requestSchema);
 
-module.exports = Profile;
+module.exports = Request;
