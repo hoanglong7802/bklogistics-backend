@@ -5,6 +5,8 @@ const http = require("http");
 const { Server } = require("socket.io");
 const swaggerConfig = require("./swagger");
 
+const notificationController = require("./controllers/notificationController");
+
 const profileRouter = require("./routers/profileRouter");
 const orderRouter = require("./routers/orderRouter");
 const productRouter = require("./routers/productRouter");
@@ -84,8 +86,8 @@ io.on("connection", (socket) => {
     // Emit a response event back to the client
     socket.emit("responseEvent", "Server says hello!");
   });
-  socket.on("/api/notis/", () => {
-    socket.emit("message", "OK");
+  socket.on("/api/notis", () => {
+    notificationController.getNotification(socket);
   });
   socket.on("disconnect", () => {
     console.log("A client disconnected");
