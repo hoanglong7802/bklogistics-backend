@@ -30,22 +30,21 @@ const profileSchema = new mongoose.Schema({
 	profileImage: {
 		type: String,
 	},
-	website: {
-		type: String,
-	},
 	description: {
 		type: String,
 	},
 	listedMaterials: [
 		{
-			type: mongoose.Schema.Types.ObjectId,
-			ref: "Material",
+			materialId: {
+				type: Number,
+			}
 		},
 	],
 	listedProducts: [
 		{
-			type: mongoose.Schema.Types.ObjectId,
-			ref: "Product",
+			productId: {
+				type: Number,
+			}
 		},
 	],
 	registerDate: {

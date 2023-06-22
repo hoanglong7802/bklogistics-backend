@@ -1,9 +1,13 @@
 const mongoose = require('mongoose');
 
 const orderSchema = new mongoose.Schema({
+  order_id: {
+    type: Number,
+    require: true,
+  },
   product_id: {
-    type: mongoose.Schema.Types.ObjectId,
-    ref: "Product"
+    type: Number,
+    require: true,
   },
   
   created_date: {
@@ -21,11 +25,12 @@ const orderSchema = new mongoose.Schema({
     default: false
   },
   deposit_amount: {
-    type: Number
+    type: Number,
+    default: 0,
   },
   customer_address: {
-    type: mongoose.Schema.Types.ObjectId,
-    ref: "Profile"
+    type: String,
+    require: true,
   }
 });
 

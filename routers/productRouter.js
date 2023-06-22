@@ -209,7 +209,7 @@ router.get("/update-product-on-chain", productController.updateProductOnChain);
 router.post("/", productController.createProduct);
 
 // Get a product by query
-router.get("/", productController.getProducts);
+router.get("/:chainId", productController.getProducts);
 
 // Get a specific product
 router.get("/:id", productController.getProductById);

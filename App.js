@@ -2,7 +2,7 @@ require("dotenv").config();
 const express = require("express");
 const mongoose = require("mongoose");
 const http = require("http");
-const socketIO = require("socket.io");
+const { Server } = require("socket.io");
 const swaggerConfig = require("./swagger");
 
 const profileRouter = require("./routers/profileRouter");
@@ -21,34 +21,38 @@ const updateRouter = require("./routers/updateRouter");
 const app = express();
 const server = http.createServer(app);
 var cors = require("cors");
-const io = socketIO(server);
+const io = new Server(server);
 
 // Parser
 app.use(express.json());
 app.use(
-	express.urlencoded({
-		extended: true,
-	})
+  express.urlencoded({
+    extended: true,
+  })
 );
+app.use((req, res, next) => {
+  req.io = io;
+  next();
+});
 
 app.use(cors());
 
 app.io = io;
 // Connect to MongoDB
 mongoose.connect(process.env.MONGO_URI, {
-	useNewUrlParser: true,
-	useUnifiedTopology: true,
+  useNewUrlParser: true,
+  useUnifiedTopology: true,
 });
 
 const db = mongoose.connection;
 
 app.get("/", (req, res) => {
-	res.send("Welcome to the API");
+  res.sendFile(__dirname + "/index.html");
 });
 
 // Parse JSON bodies
 app.use(express.json());
-
+app.use(cors());
 // Mount router for '/api' routes
 app.use("/api/profiles", profileRouter);
 app.use("/api/orders", orderRouter);
@@ -64,23 +68,28 @@ app.use("/api/update", updateRouter);
 
 // Error handling middleware
 app.use(async (err, req, res, next) => {
-	console.error(err.stack);
-	res.status(500).json({ error: "Internal Server Error" });
+  console.error(err.stack);
+  res.status(500).json({ error: "Internal Server Error" });
 });
 
 swaggerConfig(app);
 
 io.on("connection", (socket) => {
-	console.log("A client connected");
-
+  console.log("A client connected");
   // Handle disconnect event
-  socket.on('disconnect', () => {
-    console.log('A client disconnected');
+  socket.on("hi", (data) => {
+    console.log("Data received from client:", data);
+
+    // Emit a response event back to the client
+    socket.emit("responseEvent", "Server says hello!");
+  });
+  socket.on("disconnect", () => {
+    console.log("A client disconnected");
   });
 });
 
 // Start the server
 PORT = 3001;
 server.listen(PORT, () => {
-	console.log("Server is running on http://localhost:3001");
+  console.log(`Sever is running on http://localhost:${PORT}`);
 });
