@@ -10,7 +10,7 @@ const options = {
       description: 'API of bklogistics project',
     },
   },
-  apis: ['./routers/*.js'], // Replace with the path to your route files
+  apis: ['./routers/*.js'],
 };
 
 const specs = swaggerJsdoc(options);

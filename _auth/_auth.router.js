@@ -12,6 +12,7 @@ const {
 
 // router.post("/register", register);
 router.post("/login", login);
+router.post("/check-admin", checkAdmin);
 router.post("/check", checkAdmin);
 // router.post("/refresh", refresh);
 // router.post("/password/edit", authenticate, changePassword);
