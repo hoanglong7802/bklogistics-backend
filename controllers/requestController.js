@@ -14,7 +14,7 @@ module.exports = {
 		} catch (err) {
 			res.status(400).json({
 				message: "Failed",
-				error: error,
+				error: err,
 				timestamp: Date.now(),
 				path: "/request",
 				method: "GET",
@@ -31,6 +31,7 @@ module.exports = {
 			phoneNumber,
 			haveSBT,
 			profileImage,
+			chainId,
 		} = req.body;
 		try {
 			const request = new Request({
@@ -43,6 +44,7 @@ module.exports = {
 				profileImage: profileImage,
 				phoneNumber: phoneNumber,
 				haveSBT: haveSBT,
+				chainId: chainId,
 				registerDate: Date.now(),
 			});
 
