@@ -1,7 +1,6 @@
 const express = require('express');
 const RequiredMaterial = require('../models/requiredMaterialModel');
 
-
 exports.createRequiredMaterial = async (req, res, next) => {
     try {
         const {
@@ -100,7 +99,7 @@ exports.updateRequiredMaterial = async (req, res, next) => {
         );
 
         if (!updatedRequiredMaterial) {
-            return res.status(404).json({error: "Order-Stakeholder not found"});
+            return res.status(404).json({error: "Required material not found"});
         }
 
         res.json(updatedRequiredMaterial);
@@ -117,7 +116,7 @@ exports.deleteRequiredMaterial = async (req, res, next) => {
         const deletedRequiredMaterial = await RequiredMaterial.findByIdAndDelete(id);
 
         if (!deletedRequiredMaterial) {
-            return res.status(404).json({ error: 'Order not found' });
+            return res.status(404).json({ error: 'Required material not found' });
         }
 
         res.json(deletedRequiredMaterial);

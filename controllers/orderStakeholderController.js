@@ -109,7 +109,7 @@ exports.updateOrderStakeholder = async (req, res, next) => {
         );
 
         if (!updatedOrderStakeholder) {
-            res.status(404).json({error: "Order-Stakeholder not found"});
+            return res.status(404).json({error: "Order-Stakeholder not found"});
         }
 
         res.json(updatedOrderStakeholder);
@@ -126,7 +126,7 @@ exports.deleteOrderStakeholder = async (req, res, next) => {
         const deletedOrderStakeholder = await OrderStakeholder.findByIdAndDelete(id);
 
         if (!deletedOrderStakeholder) {
-            return res.status(404).json({ error: 'Order not found' });
+            return res.status(404).json({ error: "Order-Stakeholder not found" });
           }
 
         res.json(deletedOrderStakeholder);
