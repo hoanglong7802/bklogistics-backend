@@ -212,7 +212,7 @@ router.post("/", productController.createProduct);
 router.get("/:chainId", productController.getProducts);
 
 // Get a specific product
-router.get("/:id", productController.getProductById);
+router.get("/:chainId/:productId", productController.getProductById);
 
 // Update a product
 router.put("/:id", productController.updateProduct);

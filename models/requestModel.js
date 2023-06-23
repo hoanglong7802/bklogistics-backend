@@ -19,7 +19,7 @@ const requestSchema = new mongoose.Schema({
 		type: String,
 	},
 	phoneNumber: {
-		type: Number,
+		type: String,
 	},
 	profileImage: {
 		type: String,
@@ -42,6 +42,10 @@ const requestSchema = new mongoose.Schema({
 	registerDate: {
 		type: Date,
 		default: Date.now,
+	},
+	chainId: {
+		type: Number,
+		required: true,
 	},
 });
 

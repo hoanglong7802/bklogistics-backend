@@ -1,4 +1,4 @@
-const mongoose = required('mongoose');
+const mongoose = require('mongoose');
 
 const requiredMaterialSchema = new mongoose.Schema({
     material_id: {
@@ -21,6 +21,6 @@ const requiredMaterialSchema = new mongoose.Schema({
     }
 });
 
-const RequiredMateral = mongoose.model("RequiredMaterial", requiredMaterialSchema);
+const RequiredMaterial = mongoose.model("RequiredMaterial", requiredMaterialSchema);
 
 module.exports = RequiredMaterial;

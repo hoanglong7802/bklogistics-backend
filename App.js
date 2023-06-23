@@ -11,6 +11,8 @@ const productRouter = require("./routers/productRouter");
 const materialRouter = require("./routers/materialRouter");
 const shipmentRouter = require("./routers/shipmentRouter");
 const notificationRouter = require("./routers/notificationRouter");
+const orderStakeholderRouter = require("./routers/orderStakeholderRouter");
+const requiredMaterialRouter = require("./routers/requiredMaterialRouter");
 const requestRouter = require("./routers/requestRouter");
 const _authRouter = require("./_auth/_auth.router");
 const updateRouter = require("./routers/updateRouter");
@@ -35,6 +37,7 @@ app.use((req, res, next) => {
 
 app.use(cors());
 
+app.io = io;
 // Connect to MongoDB
 mongoose.connect(process.env.MONGO_URI, {
   useNewUrlParser: true,
@@ -43,9 +46,6 @@ mongoose.connect(process.env.MONGO_URI, {
 
 const db = mongoose.connection;
 
-app.get("/", (req, res) => {
-  res.sendFile(__dirname + "/index.html");
-});
 
 // Parse JSON bodies
 app.use(express.json());
@@ -57,9 +57,14 @@ app.use("/api/products", productRouter);
 app.use("/api/materials", materialRouter);
 app.use("/api/shipments", shipmentRouter);
 app.use("/api/notis", notificationRouter);
+app.use("/api/order-stakeholder", orderStakeholderRouter);
+app.use("/api/required-material", requiredMaterialRouter);
 app.use("/api/request", requestRouter);
 app.use("/api/auth", _authRouter);
 app.use("/api/update", updateRouter);
+app.get("/api/notis", (req, res) => {
+  res.sendFile(__dirname + "/index.html");
+});
 
 // Error handling middleware
 app.use(async (err, req, res, next) => {
