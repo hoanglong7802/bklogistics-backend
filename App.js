@@ -39,7 +39,6 @@ app.use((req, res, next) => {
 
 app.use(cors());
 
-app.io = io;
 // Connect to MongoDB
 mongoose.connect(process.env.MONGO_URI, {
   useNewUrlParser: true,
@@ -48,11 +47,25 @@ mongoose.connect(process.env.MONGO_URI, {
 
 const db = mongoose.connection;
 
-
-
 // Parse JSON bodies
 app.use(express.json());
 app.use(cors());
+
+io.on("connection", (socket) => {
+  console.log("A client connected");
+  // Handle disconnect event
+  socket.on("hi", (data) => {
+    console.log("Data received from client:", data);
+
+    // Emit a response event back to the client
+    socket.emit("responseEvent", "Server says hello!");
+  });
+  notificationController.getNotification(socket);
+  socket.on("disconnect", () => {
+    console.log("A client disconnected");
+  });
+});
+
 // Mount router for '/api' routes
 app.use("/api/profiles", profileRouter);
 app.use("/api/orders", orderRouter);
@@ -69,6 +82,12 @@ app.get("/", (req, res) => {
 	res.sendFile(__dirname + "/index.html");
 });
 
+//This endpoint is for testing push notification
+
+app.get("/orders", (req, res) => {
+	res.sendFile(__dirname + "/order_client.html");
+});
+
 // Error handling middleware
 app.use(async (err, req, res, next) => {
   console.error(err.stack);
@@ -77,25 +96,9 @@ app.use(async (err, req, res, next) => {
 
 swaggerConfig(app);
 
-io.on("connection", (socket) => {
-  console.log("A client connected");
-  // Handle disconnect event
-  socket.on("hi", (data) => {
-    console.log("Data received from client:", data);
-
-    // Emit a response event back to the client
-    socket.emit("responseEvent", "Server says hello!");
-  });
-  socket.on("/api/notis", () => {
-    notificationController.getNotification(socket);
-  });
-  socket.on("disconnect", () => {
-    console.log("A client disconnected");
-  });
-});
 
 // Start the server
 PORT = 3001;
 server.listen(PORT, () => {
-  console.log(`Sever is running on http://localhost:${PORT}`);
+  console.log(`Server is running on http://localhost:${PORT}`);
 });

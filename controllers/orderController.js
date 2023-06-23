@@ -110,9 +110,10 @@ exports.getOrders = async (req, res, next) => {
     if (status) {
       query.status = status;
     }
-
+    console.log(query);
     const orders = await Order.find(query).exec();
 
+    req.io.emit("message_order", "Order get completed");
     res.json(orders);
   } catch (error) {
     next(error);

@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Your Page</title>
+  </head>
+  <body>
+    <!-- Your HTML content -->
+    <p>Order Client</p>
+    <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/4.4.1/socket.io.js"></script>
+    <script>
+      // Your JavaScript code using Axios
+      const requestData = {};
+      const socket = io();
+
+      socket.on("connection", () => {
+        console.log("Connected to server");
+      });
+
+      axios.defaults.baseURL = "http://localhost:3001";
+
+      var delayInMilliseconds = 10000; //10 second
+
+      axios.get("/api/orders", requestData)
+            .then((response) => {
+              console.log("Received response from server: ", response);
+            })
+            .catch((error) => {
+              console.error("Error occurred:", error);
+      });
+      socket.on("message_order", (data) => {
+        alert(`Success: ${data}`);
+      });
+    </script>
+  </body>
+</html>
