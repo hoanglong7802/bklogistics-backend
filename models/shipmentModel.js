@@ -33,6 +33,10 @@ const shipmentSchema = new mongoose.Schema({
     enum: [0, 1, 2], // Add other possible values as needed
     default: 0,
   },
+  chainId: {
+		type: Number,
+		required: true,
+	  },
 });
 
 const Shipment = mongoose.model('Shipment', shipmentSchema);

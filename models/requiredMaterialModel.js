@@ -18,7 +18,11 @@ const requiredMaterialSchema = new mongoose.Schema({
     unit: {
         type: String,
         enum: ["kg", "m", "pieces"],
-    }
+    },
+    chainId: {
+		type: Number,
+		required: true,
+	  },
 });
 
 const RequiredMaterial = mongoose.model("RequiredMaterial", requiredMaterialSchema);

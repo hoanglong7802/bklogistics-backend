@@ -7,7 +7,7 @@ const profileSchema = new mongoose.Schema({
 	},
 	companyName: {
 		type: String,
-		required: true,
+		require: true,
 	},
 	email: {
 		type: String,
@@ -51,6 +51,10 @@ const profileSchema = new mongoose.Schema({
 		type: Date,
 		default: Date.now,
 	},
+	chainId: {
+		type: Number,
+		required: true,
+	  },
 });
 
 const Profile = mongoose.model("Profile", profileSchema);
