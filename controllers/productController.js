@@ -35,8 +35,9 @@ exports.updateProductOnChain = async (req, res) => {
     await Product.deleteMany({});
     products.map((product) => {
       const newProduct = new Product({
-        id: product.id,
+        productId: product.id,
         name: product.name,
+		chainId: 5,
       });
       newProduct.save();
     });
@@ -89,13 +90,14 @@ exports.getAllProducts = async (req, res, next) => {
 // Get a specific product
 exports.getProductById = async (req, res, next) => {
   try {
-    const productId = req.params.id;
+	const chainId = req.params.chainId;
+    const productId = req.params.productId;
 
-    if (!mongoose.Types.ObjectId.isValid(productId)) {
-      return res.status(400).json({ error: "Invalid product ID" });
-    }
+    // if (!mongoose.Types.ObjectId.isValid(productId)) {
+    //   return res.status(400).json({ error: "Invalid product ID" });
+    // }
 
-    const product = await Product.findById(productId);
+    const product = await Product.find().where("chainId").equals(chainId).where("productId", productId);
 
     if (!product) {
       return res.status(404).json({ error: "Product not found" });

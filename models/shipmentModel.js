@@ -7,17 +7,17 @@ const shipmentSchema = new mongoose.Schema({
   },
   sender: {
     type: mongoose.Schema.Types.ObjectId,
-    ref: 'Profile',
+    ref: "Profile",
     required: true,
   },
   carrier: {
     type: mongoose.Schema.Types.ObjectId,
-    ref: 'Profile',
+    ref: "Profile",
     required: true,
   },
   receiver: {
     type: mongoose.Schema.Types.ObjectId,
-    ref: 'Profile',
+    ref: "Profile",
     required: true,
   },
   pickup_date: {

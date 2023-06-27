@@ -29,19 +29,20 @@ exports.updateProductOnChain = async (req, res) => {
 		for (var i = 1; i <= productCounter; i++) {
 			const response = await productContract.getProduct(i);
 			products.push({
-				id: Number(response[0]),
+				productId: Number(response[0]),
 				name: response[1],
 				chainId: chainId,
 			});
 		}
 		await Product.deleteMany({});
-		products.map((product) => {
+		// await Product.insertMany(...products)
+		products.map(async (product) => {
 			const newProduct = new Product({
-				productId: product.id,
+				productId: product.productId,
 				name: product.name,
 				chainId: chainId,
 			});
-			newProduct.save();
+			await newProduct.save();
 		});
 		return res.status(200).json({
 			message: "Successful",
