@@ -3,11 +3,9 @@ const mongoose = require("mongoose");
 const requestSchema = new mongoose.Schema({
 	walletAddress: {
 		type: String,
-		unique: true,
 	},
 	companyName: {
 		type: String,
-		required: true,
 	},
 	email: {
 		type: String,

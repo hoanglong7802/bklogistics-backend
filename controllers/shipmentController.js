@@ -16,7 +16,7 @@ exports.createShipment = async (req, res, next) => {
     });
 
     const createdShipment = await shipment.save();
-
+    req.io.emit("message_created_shipment", "Shipment is successfully created!");
     res.status(201).json(createdShipment);
   } catch (error) {
     next(error);
@@ -68,6 +68,10 @@ exports.updateShipment = async (req, res, next) => {
   try {
     const shipmentId = req.params.id;
     const { orderId, sender, carrier, receiver, pickup_date, delivery_date , status} = req.body;
+
+    if (status !== await Order.findById(orderId).status) {
+      req.io.emit("message_changed_status_shipment", "Status of shipment changed!");
+    } 
 
     const updatedShipment = await Shipment.findByIdAndUpdate(
       shipmentId,

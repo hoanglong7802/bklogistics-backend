@@ -18,6 +18,7 @@ exports.createOrder = async (req, res, next) => {
 
     const createdOrder = await order.save();
 
+    req.io.emit("message_created_order", "Order is created successfully!");
     res.status(201).json(createdOrder);
   } catch (error) {
     next(error);
@@ -59,9 +60,17 @@ exports.manageOrder = async (req, res, next) => {
 
 
     const allowedStatus = [0, 1, 2, 3, 4, 5];
+    //['PENDING', 'SUPPLIED', 'DELIVERING', 'SUCCESS', 'FAILED', 'CANCELLED']
     if (!allowedStatus.includes(status)) {
       return res.status(400).json({ error: 'Invalid status value' });
     }
+
+    if (status === 1) {
+        req.io.emit("message_confirmed_order", "Order confirmed!");
+    } 
+    if (status !== await Order.findById(orderId).status) {
+      req.io.emit("message_changed_status_order", "Status of order changed!");
+    } 
 
     const order = await Order.findByIdAndUpdate(
       orderId,
@@ -110,9 +119,10 @@ exports.getOrders = async (req, res, next) => {
     if (status) {
       query.status = status;
     }
-
+    console.log(query);
     const orders = await Order.find(query).exec();
 
+    req.io.emit("message_order", "Order get completed");
     res.json(orders);
   } catch (error) {
     next(error);

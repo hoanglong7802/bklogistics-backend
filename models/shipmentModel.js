@@ -34,9 +34,9 @@ const shipmentSchema = new mongoose.Schema({
     default: 0,
   },
   chainId: {
-    type: Number,
-    required: true,
-  },
+		type: Number,
+		required: true,
+	  },
 });
 
 const Shipment = mongoose.model('Shipment', shipmentSchema);

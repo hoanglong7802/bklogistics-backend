@@ -19,7 +19,11 @@ const orderStakeholderSchema = new mongoose.Schema({
   order_id: {
     type: mongoose.Schema.Types.ObjectId,
     ref: "Order" 
-  }
+  },
+  chainId: {
+		type: Number,
+		required: true,
+	  },
 });
 
 const OrderStakeholder = mongoose.model('OrderStakeholder', orderStakeholderSchema);
