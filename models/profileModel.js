@@ -10,7 +10,7 @@ const profileSchema = new mongoose.Schema({
 	email: {
 		type: String,
 	},
-	image: {
+	profileImage: {
 		type: String,
 	},
 	website: {
@@ -23,7 +23,7 @@ const profileSchema = new mongoose.Schema({
 		type: String,
 	},
 	phoneNumber: {
-		type: Number,
+		type: String,
 	},
 	profileImage: {
 		type: String,

@@ -10,12 +10,14 @@ exports.createProfile = async (req, res, next) => {
 		deliveryAddress,
 		phoneNumber,
 		description,
+		profileImage,
 	} = req.body;
 	try {
 		const profile = new Profile({
 			walletAddress: walletAddress,
 			companyName: companyName,
 			email: email,
+			profileImage: profileImage,
 			phoneNumber: phoneNumber,
 			deliveryAddress: deliveryAddress,
 			shippingAddress: shippingAddress,
