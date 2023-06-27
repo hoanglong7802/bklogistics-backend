@@ -49,6 +49,10 @@ const profileSchema = new mongoose.Schema({
 		type: Date,
 		default: Date.now,
 	},
+	chainId: {
+		type: Number,
+		required: true,
+	  },
 });
 
 const Profile = mongoose.model("Profile", profileSchema);

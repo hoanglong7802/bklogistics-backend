@@ -5,6 +5,8 @@ const http = require("http");
 const { Server } = require("socket.io");
 const swaggerConfig = require("./swagger");
 
+const notificationController = require("./controllers/notificationController");
+
 const profileRouter = require("./routers/profileRouter");
 const orderRouter = require("./routers/orderRouter");
 const productRouter = require("./routers/productRouter");
@@ -41,7 +43,6 @@ app.use((req, res, next) => {
 
 app.use(cors());
 
-app.io = io;
 // Connect to MongoDB
 mongoose.connect(process.env.MONGO_URI, {
 	useNewUrlParser: true,
@@ -49,6 +50,7 @@ mongoose.connect(process.env.MONGO_URI, {
 });
 
 const db = mongoose.connection;
+
 
 cron.schedule("0 0 */3 * * *", async () => {
 	console.log("Updating...");
@@ -63,6 +65,22 @@ app.get("/", (req, res) => {
 // Parse JSON bodies
 app.use(express.json());
 app.use(cors());
+
+io.on("connection", (socket) => {
+  console.log("A client connected");
+  // Handle disconnect event
+  socket.on("hi", (data) => {
+    console.log("Data received from client:", data);
+
+    // Emit a response event back to the client
+    socket.emit("responseEvent", "Server says hello!");
+  });
+  notificationController.getNotification(socket);
+  socket.on("disconnect", () => {
+    console.log("A client disconnected");
+  });
+});
+
 // Mount router for '/api' routes
 app.use("/api/profiles", profileRouter);
 app.use("/api/orders", orderRouter);
@@ -75,6 +93,15 @@ app.use("/api/required-material", requiredMaterialRouter);
 app.use("/api/request", requestRouter);
 app.use("/api/auth", _authRouter);
 app.use("/api/update", updateRouter);
+app.get("/", (req, res) => {
+	res.sendFile(__dirname + "/index.html");
+});
+
+//This endpoint is for testing push notification
+
+app.get("/orders", (req, res) => {
+	res.sendFile(__dirname + "/order_client.html");
+});
 
 // Error handling middleware
 app.use(async (err, req, res, next) => {
@@ -83,6 +110,7 @@ app.use(async (err, req, res, next) => {
 });
 
 swaggerConfig(app);
+
 
 io.on("connection", (socket) => {
 	console.log("A client connected");
@@ -98,8 +126,9 @@ io.on("connection", (socket) => {
 	});
 });
 
+
 // Start the server
 PORT = 3001;
 server.listen(PORT, () => {
-	console.log(`Sever is running on http://localhost:${PORT}`);
+  console.log(`Server is running on http://localhost:${PORT}`);
 });

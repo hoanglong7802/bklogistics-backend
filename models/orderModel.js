@@ -3,11 +3,11 @@ const mongoose = require('mongoose');
 const orderSchema = new mongoose.Schema({
   order_id: {
     type: Number,
-    require: true,
+    required: true,
   },
   product_id: {
     type: Number,
-    require: true,
+    required: true,
   },
   
   created_date: {
@@ -31,7 +31,12 @@ const orderSchema = new mongoose.Schema({
   customer_address: {
     type: String,
     require: true,
-  }
+  },
+  chainId: {
+    type: Number,
+    required: true,
+  },
+
 });
 
 const Order = mongoose.model('Order', orderSchema);
