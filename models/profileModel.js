@@ -3,16 +3,14 @@ const mongoose = require("mongoose");
 const profileSchema = new mongoose.Schema({
 	walletAddress: {
 		type: String,
-		unique: true,
 	},
 	companyName: {
 		type: String,
-		require: true,
 	},
 	email: {
 		type: String,
 	},
-	image: {
+	profileImage: {
 		type: String,
 	},
 	website: {
@@ -25,7 +23,7 @@ const profileSchema = new mongoose.Schema({
 		type: String,
 	},
 	phoneNumber: {
-		type: Number,
+		type: String,
 	},
 	profileImage: {
 		type: String,
@@ -37,14 +35,14 @@ const profileSchema = new mongoose.Schema({
 		{
 			materialId: {
 				type: Number,
-			}
+			},
 		},
 	],
 	listedProducts: [
 		{
 			productId: {
 				type: Number,
-			}
+			},
 		},
 	],
 	registerDate: {

@@ -114,3 +114,7 @@ exports.updateMaterialOnChain = async (req, res) => {
 		});
 	}
 };
+
+exports.updateMaterialOnChain = async (req, res) => {
+  
+}

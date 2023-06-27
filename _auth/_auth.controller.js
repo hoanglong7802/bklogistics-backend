@@ -101,6 +101,18 @@ module.exports = {
 			});
 		});
 	},
+	checkValid: async (req,res) => {
+		jwt.verify(token, process.env.ACCESS_TOKEN_SECRET, (err, user) => {
+			if (err)
+				return res.status(403).json({ message: "Failed", error: err.message });
+
+			return res.json({
+				message: "Success",
+				isAdmin: user.isAdmin,
+				jwt: token,
+			});
+		});
+	},
 	refresh: async (req, res) => {
 		const refreshToken = req.body.refreshToken;
 		jwt.verify(refreshToken, process.env.REFRESH_TOKEN_SECRET, (err, user) => {

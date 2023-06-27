@@ -18,7 +18,11 @@ const requiredMaterialRouter = require("./routers/requiredMaterialRouter");
 const requestRouter = require("./routers/requestRouter");
 const _authRouter = require("./_auth/_auth.router");
 const updateRouter = require("./routers/updateRouter");
-
+const {
+	updateProductOnChain,
+	updateMaterialOnChain,
+} = require("./controllers/updateController");
+var cron = require("node-cron");
 // Create Express app
 const app = express();
 const server = http.createServer(app);
@@ -28,24 +32,35 @@ const io = new Server(server);
 // Parser
 app.use(express.json());
 app.use(
-  express.urlencoded({
-    extended: true,
-  })
+	express.urlencoded({
+		extended: true,
+	})
 );
 app.use((req, res, next) => {
-  req.io = io;
-  next();
+	req.io = io;
+	next();
 });
 
 app.use(cors());
 
 // Connect to MongoDB
 mongoose.connect(process.env.MONGO_URI, {
-  useNewUrlParser: true,
-  useUnifiedTopology: true,
+	useNewUrlParser: true,
+	useUnifiedTopology: true,
 });
 
 const db = mongoose.connection;
+
+
+cron.schedule("0 0 */3 * * *", async () => {
+	console.log("Updating...");
+	await updateProductOnChain();
+	await updateMaterialOnChain();
+});
+
+app.get("/", (req, res) => {
+	res.sendFile(__dirname + "/index.html");
+});
 
 // Parse JSON bodies
 app.use(express.json());
@@ -90,11 +105,26 @@ app.get("/orders", (req, res) => {
 
 // Error handling middleware
 app.use(async (err, req, res, next) => {
-  console.error(err.stack);
-  res.status(500).json({ error: "Internal Server Error" });
+	console.error(err.stack);
+	res.status(500).json({ error: "Internal Server Error" });
 });
 
 swaggerConfig(app);
+
+
+io.on("connection", (socket) => {
+	console.log("A client connected");
+	// Handle disconnect event
+	socket.on("hi", (data) => {
+		console.log("Data received from client:", data);
+
+		// Emit a response event back to the client
+		socket.emit("responseEvent", "Server says hello!");
+	});
+	socket.on("disconnect", () => {
+		console.log("A client disconnected");
+	});
+});
 
 
 // Start the server
