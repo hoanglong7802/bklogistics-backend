@@ -7,17 +7,17 @@ const shipmentSchema = new mongoose.Schema({
   },
   sender: {
     type: mongoose.Schema.Types.ObjectId,
-    ref: 'Profile',
+    ref: "Profile",
     required: true,
   },
   carrier: {
     type: mongoose.Schema.Types.ObjectId,
-    ref: 'Profile',
+    ref: "Profile",
     required: true,
   },
   receiver: {
     type: mongoose.Schema.Types.ObjectId,
-    ref: 'Profile',
+    ref: "Profile",
     required: true,
   },
   pickup_date: {
@@ -32,6 +32,10 @@ const shipmentSchema = new mongoose.Schema({
     type: Number,
     enum: [0, 1, 2], // Add other possible values as needed
     default: 0,
+  },
+  chainId: {
+    type: Number,
+    required: true,
   },
 });
 

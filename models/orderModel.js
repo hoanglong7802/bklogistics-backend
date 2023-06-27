@@ -9,7 +9,7 @@ const orderSchema = new mongoose.Schema({
     type: Number,
     require: true,
   },
-  
+
   created_date: {
     type: Date,
     default: Date.now,
@@ -20,9 +20,9 @@ const orderSchema = new mongoose.Schema({
     //['PENDING', 'SUPPLIED', 'DELIVERING', 'SUCCESS', 'FAILED', 'CANCELLED']
     default: 0,
   },
-  is_paid:{
+  is_paid: {
     type: Boolean,
-    default: false
+    default: false,
   },
   deposit_amount: {
     type: Number,
@@ -31,7 +31,11 @@ const orderSchema = new mongoose.Schema({
   customer_address: {
     type: String,
     require: true,
-  }
+  },
+  chainId: {
+    type: Number,
+    required: true,
+  },
 });
 
 const Order = mongoose.model('Order', orderSchema);
