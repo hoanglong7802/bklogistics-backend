@@ -162,25 +162,26 @@
  *           enum: [kg, m]
  */
 
-
-const express = require('express');
-const materialController = require('../controllers/materialController');
+const express = require("express");
+const materialController = require("../controllers/materialController");
 
 const router = express.Router();
 
 // Create a new material
-router.post('/', materialController.createMaterial);
+router.post("/", materialController.createMaterial);
 
 // Get materials by fields
 router.get('/:chainId', materialController.getAllMaterialOnChain);
 
+router.get("/", materialController.getMaterials);
+
 // Get a specific material
-router.get('/:id', materialController.getMaterialById);
+router.get("/id/:id", materialController.getMaterialById);
 
 // Update a material
-router.put('/:id', materialController.updateMaterial);
+router.put("/:id", materialController.updateMaterial);
 
 // Delete a material
-router.delete('/:id', materialController.deleteMaterial);
+router.delete("/:id", materialController.deleteMaterial);
 
 module.exports = router;
