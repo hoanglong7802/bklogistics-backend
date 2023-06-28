@@ -20,8 +20,11 @@ exports.createMaterial = async (req, res, next) => {
 
 // Get all materials
 exports.getAllMaterialOnChain = async (req, res, next) => {
-  try {
-    const materials = await Material.find().where('chainId', req.params.chainId);
+	try {
+		const materials = await Material.find().where(
+			"chainId",
+			req.params.chainId
+		);
 		return res.status(200).json({
 			message: "Successful",
 			materials: materials,
@@ -38,6 +41,7 @@ exports.getAllMaterialOnChain = async (req, res, next) => {
 			path: `/materials`,
 			method: "GET",
 		});
+	}
 };
 
 exports.getMaterialByNetwork = async (req, res) => {
