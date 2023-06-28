@@ -253,7 +253,7 @@ router.put("/:address/list", profileController.addListed);
 router.get("/:address/list", profileController.getListed);
 
 // Get a profile by query
-router.get("/", profileController.getProfiles);
+router.get("/", profileController.getAllProfiles);
 
 // Get a specific profile
 router.get("/:id", profileController.getProfileById);

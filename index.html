@@ -8,7 +8,6 @@
 
           socket.on('connect', () => {
             console.log('Connected to the server.');
-
             // Emit an event to the server
             socket.emit('hi', 'Hello from the client!');
           });

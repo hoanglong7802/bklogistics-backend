@@ -6,54 +6,55 @@ const addressController = require("../contract/addresses/address");
 
 // Create a new product
 exports.updateProductOnChain = async (req, res) => {
-	const addresses = addressController.getNetworkAddress(5);
-	let productCounter;
-	let products = [];
+  const addresses = addressController.getNetworkAddress(5);
+  let productCounter;
+  let products = [];
 
-	try {
-		const provider = new ethers.AlchemyProvider(
-			5,
-			`${process.env.GOERLI_PRIVATE_KEY}`
-		);
-		const signer = new ethers.Wallet(process.env.WALLET_PRIVATE_KEY, provider);
-		// const signer =
-		const productContract = new ethers.Contract(
-			addresses.PRODUCT_CONTRACT_ADDRESS,
-			ProductContractABI,
-			signer
-		);
+  try {
+    const provider = new ethers.AlchemyProvider(
+      5,
+      `${process.env.GOERLI_PRIVATE_KEY}`
+    );
+    const signer = new ethers.Wallet(process.env.WALLET_PRIVATE_KEY, provider);
+    // const signer =
+    const productContract = new ethers.Contract(
+      addresses.PRODUCT_CONTRACT_ADDRESS,
+      ProductContractABI,
+      signer
+    );
 
-		productCounter = Number(await productContract.productCounter());
+    productCounter = Number(await productContract.productCounter());
 
-		for (var i = 1; i <= productCounter; i++) {
-			const response = await productContract.getProduct(i);
-			products.push({
-				id: Number(response[0]),
-				name: response[1],
-			});
-		}
-		await Product.deleteMany({});
-		products.map((product) => {
-			const newProduct = new Product({
-				id: product.id,
-				name: product.name,
-			});
-			newProduct.save();
-		});
-		return res.status(200).json({
-			message: "Successful",
-			path: "/products/update-product-on-chain",
-			timestamp: Date.now(),
-			data: products,
-		});
-	} catch (err) {
-		return res.status(500).json({
-			message: "Failed",
-			path: "/products/update-product-on-chain",
-			timestamp: Date.now(),
-			error: err,
-		});
-	}
+    for (var i = 1; i <= productCounter; i++) {
+      const response = await productContract.getProduct(i);
+      products.push({
+        id: Number(response[0]),
+        name: response[1],
+      });
+    }
+    await Product.deleteMany({});
+    products.map((product) => {
+      const newProduct = new Product({
+        productId: product.id,
+        name: product.name,
+		chainId: 5,
+      });
+      newProduct.save();
+    });
+    return res.status(200).json({
+      message: "Successful",
+      path: "/products/update-product-on-chain",
+      timestamp: Date.now(),
+      data: products,
+    });
+  } catch (err) {
+    return res.status(500).json({
+      message: "Failed",
+      path: "/products/update-product-on-chain",
+      timestamp: Date.now(),
+      error: err,
+    });
+  }
 };
 
 exports.createProduct = async (req, res, next) => {
@@ -88,23 +89,22 @@ exports.getAllProducts = async (req, res, next) => {
 
 // Get a specific product
 exports.getProductById = async (req, res, next) => {
-	try {
-		const productId = req.params.id;
+  try {
+	const chainId = req.params.chainId;
+    const productId = req.params.productId;
 
-		if (!mongoose.Types.ObjectId.isValid(productId)) {
-			return res.status(400).json({ error: "Invalid product ID" });
-		}
+    // if (!mongoose.Types.ObjectId.isValid(productId)) {
+    //   return res.status(400).json({ error: "Invalid product ID" });
+    // }
 
-		const product = await Product.findById(productId);
-
+    const product = await Product.find().where("chainId").equals(chainId).where("productId", productId);
 		if (!product) {
 			return res.status(404).json({ error: "Product not found" });
 		}
-
-		res.json(product);
-	} catch (error) {
-		next(error);
-	}
+    return res.json(product);
+  } catch (error) {
+    next(error);
+  }
 };
 
 exports.getProducts = async (req, res, next) => {
