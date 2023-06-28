@@ -19,9 +19,9 @@ exports.createMaterial = async (req, res, next) => {
 };
 
 // Get all materials
-exports.getAllMaterials = async (req, res, next) => {
+exports.getAllMaterialOnChain = async (req, res, next) => {
   try {
-    const materials = await Material.find().exec();
+    const materials = await Material.find().where('chainId', req.params.chainId);
 
     res.json(materials);
   } catch (error) {

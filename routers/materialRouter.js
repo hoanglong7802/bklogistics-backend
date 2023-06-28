@@ -172,7 +172,7 @@ const router = express.Router();
 router.post('/', materialController.createMaterial);
 
 // Get materials by fields
-router.get('/', materialController.getMaterials);
+router.get('/:chainId', materialController.getAllMaterialOnChain);
 
 // Get a specific material
 router.get('/:id', materialController.getMaterialById);

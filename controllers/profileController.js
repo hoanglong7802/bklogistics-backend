@@ -51,7 +51,7 @@ exports.createProfile = async (req, res, next) => {
 // Get all profiles
 exports.getAllProfiles = async (req, res, next) => {
 	try {
-		const profiles = await Profile.find().exec();
+		const profiles = await Profile.find();
 
 		res.json(profiles);
 	} catch (error) {

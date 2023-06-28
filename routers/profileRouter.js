@@ -250,7 +250,7 @@ router.post("/", profileController.createProfile);
 router.get("/address/:address", profileController.getByWalletAddress);
 
 // Get a profile by query
-router.get("/", profileController.getProfiles);
+router.get("/", profileController.getAllProfiles);
 
 // Get a specific profile
 router.get("/:id", profileController.getProfileById);
