@@ -33,16 +33,12 @@ const profileSchema = new mongoose.Schema({
 	},
 	listedMaterials: [
 		{
-			materialId: {
-				type: Number,
-			},
+			type: Number,
 		},
 	],
 	listedProducts: [
 		{
-			productId: {
-				type: Number,
-			},
+			type: Number,
 		},
 	],
 	registerDate: {

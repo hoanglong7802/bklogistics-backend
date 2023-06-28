@@ -249,6 +249,9 @@ router.post("/", profileController.createProfile);
 // Get profile by wallet address
 router.get("/address/:address", profileController.getByWalletAddress);
 
+router.put("/:address/list", profileController.addListed);
+router.get("/:address/list", profileController.getListed);
+
 // Get a profile by query
 router.get("/", profileController.getProfiles);
 
