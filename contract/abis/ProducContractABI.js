@@ -95,7 +95,13 @@ exports.ProductContractABI = [
 			},
 		],
 		name: "addMaterial",
-		outputs: [],
+		outputs: [
+			{
+				internalType: "uint256",
+				name: "materialId",
+				type: "uint256",
+			},
+		],
 		stateMutability: "nonpayable",
 		type: "function",
 	},
@@ -108,7 +114,13 @@ exports.ProductContractABI = [
 			},
 		],
 		name: "addProduct",
-		outputs: [],
+		outputs: [
+			{
+				internalType: "uint256",
+				name: "productId",
+				type: "uint256",
+			},
+		],
 		stateMutability: "nonpayable",
 		type: "function",
 	},

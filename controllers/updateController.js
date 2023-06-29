@@ -52,7 +52,7 @@ exports.updateProductOnChain = async (req, res) => {
 			data: products,
 		});
 	} catch (err) {
-		return res.status(500).json({
+		return res.status(400).json({
 			message: "Failed",
 			path: "/onchain/products",
 			timestamp: Date.now(),
@@ -107,7 +107,7 @@ exports.updateMaterialOnChain = async (req, res) => {
 			data: materials,
 		});
 	} catch (err) {
-		return res.status(500).json({
+		return res.status(400).json({
 			message: "Failed",
 			path: "/onchain/material",
 			timestamp: Date.now(),
@@ -115,7 +115,3 @@ exports.updateMaterialOnChain = async (req, res) => {
 		});
 	}
 };
-
-exports.updateMaterialOnChain = async (req, res) => {
-  
-}
