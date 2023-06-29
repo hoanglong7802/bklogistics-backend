@@ -137,6 +137,10 @@ exports.updateOrder = async (req, res, next) => {
     const orderId = req.params.id;
     const {suppliers, manufacturers, address, status } = req.body;
 
+    if (status !== await Order.findById(orderId).status) {
+      req.io.emit("message_changed_status_order", "Status of order changed!");
+    } 
+
     const updatedOrder = await Order.findByIdAndUpdate(
       orderId,
       {suppliers, manufacturers, address, status },

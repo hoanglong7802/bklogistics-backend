@@ -100,6 +100,10 @@ module.exports = {
 				{ _id: id },
 				{ status: newStatus }
 			);
+			
+			if (newStatus === "verified") {
+				req.io.emit("message_order_signed", "Order signed");
+			};
 
 			res.status(200).json({
 				message: "Successful",
@@ -155,6 +159,8 @@ module.exports = {
 								error: `${address} not own any Soulbound`,
 							});
 						} else {
+							req.io.emit("message_sbt_verified", "SBT Successfully issued");
+
 							SBTContract.tokenURI(res)
 								.then(async (res) => {
 									fetch(`${IPFS_URL}${res}`)
