@@ -51,11 +51,11 @@ mongoose.connect(process.env.MONGO_URI, {
 
 const db = mongoose.connection;
 
-
 cron.schedule("0 0 */3 * * *", async () => {
-	console.log("Updating...");
+	console.log("Updating onchain data...");
 	await updateProductOnChain();
 	await updateMaterialOnChain();
+	await updateOrderOnchain();
 });
 
 app.get("/", (req, res) => {
@@ -67,18 +67,18 @@ app.use(express.json());
 app.use(cors());
 
 io.on("connection", (socket) => {
-  console.log("A client connected");
-  // Handle disconnect event
-  socket.on("hi", (data) => {
-    console.log("Data received from client:", data);
+	console.log("A client connected");
+	// Handle disconnect event
+	socket.on("hi", (data) => {
+		console.log("Data received from client:", data);
 
-    // Emit a response event back to the client
-    socket.emit("responseEvent", "Server says hello!");
-  });
-  notificationController.getNotification(socket);
-  socket.on("disconnect", () => {
-    console.log("A client disconnected");
-  });
+		// Emit a response event back to the client
+		socket.emit("responseEvent", "Server says hello!");
+	});
+	notificationController.getNotification(socket);
+	socket.on("disconnect", () => {
+		console.log("A client disconnected");
+	});
 });
 
 // Mount router for '/api' routes
@@ -111,7 +111,6 @@ app.use(async (err, req, res, next) => {
 
 swaggerConfig(app);
 
-
 io.on("connection", (socket) => {
 	console.log("A client connected");
 	// Handle disconnect event
@@ -126,9 +125,8 @@ io.on("connection", (socket) => {
 	});
 });
 
-
 // Start the server
 PORT = 3001;
 server.listen(PORT, () => {
-  console.log(`Server is running on http://localhost:${PORT}`);
+	console.log(`Server is running on http://localhost:${PORT}`);
 });

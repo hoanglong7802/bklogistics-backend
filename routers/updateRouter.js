@@ -10,7 +10,7 @@ router.get(
 	"/onchain/:chainId/material",
 	updateController.updateMaterialOnChain
 );
-router.get("/onchain/:chainId/order", updateController.updateProductOnChain);
+router.get("/onchain/:chainId/order", updateController.updateOrderOnchain);
 
 // router.put("/update/:id", authenticate, requestController.updateStatus);
 

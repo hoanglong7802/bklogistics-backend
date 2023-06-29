@@ -3,7 +3,9 @@ const Product = require("../models/productModel");
 const Material = require("../models/materialModel");
 const mongoose = require("mongoose");
 const { ProductContractABI } = require("../contract/abis/ProducContractABI");
+const { SupplyChainABI } = require("../contract/abis/SupplyChainABI");
 const addressController = require("../contract/addresses/address");
+const Order = require("../models/orderModel");
 
 exports.updateProductOnChain = async (req, res) => {
 	const chainId = Number(req.params.chainId);
@@ -110,6 +112,71 @@ exports.updateMaterialOnChain = async (req, res) => {
 		return res.status(400).json({
 			message: "Failed",
 			path: "/onchain/material",
+			timestamp: Date.now(),
+			error: err,
+		});
+	}
+};
+
+exports.updateOrderOnchain = async (req, res) => {
+	const chainId = Number(req.params.chainId);
+	const addresses = addressController.getNetworkAddress(chainId);
+	let materialCounter;
+	let orders = [];
+
+	try {
+		const provider = new ethers.AlchemyProvider(
+			chainId,
+			`${process.env.GOERLI_PRIVATE_KEY}`
+		);
+		const signer = new ethers.Wallet(process.env.WALLET_PRIVATE_KEY, provider);
+
+		const supplyChainContract = new ethers.Contract(
+			addresses.SUPPLY_CHAIN_CONTRACT_ADDRESS,
+			SupplyChainABI,
+			signer
+		);
+
+		orderCounter = Number(await supplyChainContract.orderCounter());
+
+		for (var i = 1; i < orderCounter; i++) {
+			const response = await supplyChainContract.viewOrder(i);
+			if (Number(response[0]) == 0) continue;
+			// orders.push({
+			// 	id: Number(response[0]),
+			// 	name: response[1],
+			// 	chainId: chainId,
+			// });
+			let order = {
+				order_id: Number(response[0]),
+				product_id: Number(response[1]),
+				created_date: new Date(Number(response[5])),
+				status: Number(response[6]),
+				is_paid: Number(response[7]),
+				deposit_amount: ethers.formatEther(Number(response[8])),
+				customer_address: response[2],
+				chainId: Number(req.params.chainId),
+			};
+			// console.log(order);
+			orders.push(order);
+		}
+		console.log(orders);
+		await Order.deleteMany({});
+		await orders.map(async (order) => {
+			const newOrder = new Order(order);
+			await newOrder.save();
+		});
+		return res.status(200).json({
+			message: "Successful",
+			path: "/onchain/order",
+			timestamp: Date.now(),
+			chainId: chainId,
+			data: orders,
+		});
+	} catch (err) {
+		return res.status(400).json({
+			message: "Failed",
+			path: "/onchain/order",
 			timestamp: Date.now(),
 			error: err,
 		});
