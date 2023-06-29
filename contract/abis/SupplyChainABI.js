@@ -401,14 +401,24 @@ exports.SupplyChainABI = [
 				type: "uint256",
 			},
 			{
-				internalType: "address",
-				name: "_account",
-				type: "address",
+				internalType: "address[]",
+				name: "_accounts",
+				type: "address[]",
 			},
 			{
-				internalType: "uint256",
-				name: "price",
-				type: "uint256",
+				internalType: "uint256[]",
+				name: "_productIds",
+				type: "uint256[]",
+			},
+			{
+				internalType: "uint256[]",
+				name: "_prices",
+				type: "uint256[]",
+			},
+			{
+				internalType: "uint256[]",
+				name: "_qty",
+				type: "uint256[]",
 			},
 		],
 		name: "addPrice",
@@ -684,6 +694,19 @@ exports.SupplyChainABI = [
 		type: "function",
 	},
 	{
+		inputs: [],
+		name: "orderCounter",
+		outputs: [
+			{
+				internalType: "uint256",
+				name: "",
+				type: "uint256",
+			},
+		],
+		stateMutability: "view",
+		type: "function",
+	},
+	{
 		inputs: [
 			{
 				internalType: "uint256",
@@ -730,7 +753,7 @@ exports.SupplyChainABI = [
 				type: "address",
 			},
 		],
-		name: "renounce",
+		name: "renounceCarrier",
 		outputs: [],
 		stateMutability: "nonpayable",
 		type: "function",
@@ -743,7 +766,7 @@ exports.SupplyChainABI = [
 				type: "address",
 			},
 		],
-		name: "renounceCarrier",
+		name: "renounceMember",
 		outputs: [],
 		stateMutability: "nonpayable",
 		type: "function",
@@ -807,6 +830,25 @@ exports.SupplyChainABI = [
 		inputs: [
 			{
 				internalType: "uint256",
+				name: "",
+				type: "uint256",
+			},
+		],
+		name: "totalPrice",
+		outputs: [
+			{
+				internalType: "uint256",
+				name: "",
+				type: "uint256",
+			},
+		],
+		stateMutability: "view",
+		type: "function",
+	},
+	{
+		inputs: [
+			{
+				internalType: "uint256",
 				name: "_orderId",
 				type: "uint256",
 			},
@@ -856,6 +898,40 @@ exports.SupplyChainABI = [
 			{
 				internalType: "uint256",
 				name: "deposited",
+				type: "uint256",
+			},
+		],
+		stateMutability: "view",
+		type: "function",
+	},
+	{
+		inputs: [
+			{
+				internalType: "uint256",
+				name: "_orderId",
+				type: "uint256",
+			},
+			{
+				internalType: "address",
+				name: "_account",
+				type: "address",
+			},
+		],
+		name: "viewOrderStakeholderDetail",
+		outputs: [
+			{
+				internalType: "uint256",
+				name: "productId",
+				type: "uint256",
+			},
+			{
+				internalType: "uint256",
+				name: "quantity",
+				type: "uint256",
+			},
+			{
+				internalType: "uint256",
+				name: "price",
 				type: "uint256",
 			},
 		],

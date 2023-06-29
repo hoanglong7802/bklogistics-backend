@@ -13,6 +13,7 @@ exports.createProfile = async (req, res, next) => {
 		phoneNumber,
 		description,
 		profileImage,
+		chainId,
 	} = req.body;
 	try {
 		const profile = new Profile({
@@ -27,6 +28,7 @@ exports.createProfile = async (req, res, next) => {
 			description: description,
 			listedMaterials: [],
 			listedProducts: [],
+			chainId: chainId,
 			registerDate: Date.now(),
 		});
 

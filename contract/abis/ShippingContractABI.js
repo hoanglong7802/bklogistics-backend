@@ -6,6 +6,11 @@ exports.ShippingContractABI = [
 				name: "_roleContractAddress",
 				type: "address",
 			},
+			{
+				internalType: "address",
+				name: "_supplyChainContractAddress",
+				type: "address",
+			},
 		],
 		stateMutability: "nonpayable",
 		type: "constructor",
@@ -199,7 +204,13 @@ exports.ShippingContractABI = [
 			},
 		],
 		name: "createShipment",
-		outputs: [],
+		outputs: [
+			{
+				internalType: "uint256",
+				name: "",
+				type: "uint256",
+			},
+		],
 		stateMutability: "nonpayable",
 		type: "function",
 	},
@@ -278,6 +289,51 @@ exports.ShippingContractABI = [
 				internalType: "enum IShipping.ShippingStatus",
 				name: "status",
 				type: "uint8",
+			},
+		],
+		stateMutability: "view",
+		type: "function",
+	},
+	{
+		inputs: [
+			{
+				internalType: "uint256",
+				name: "_orderId",
+				type: "uint256",
+			},
+		],
+		name: "shipmentOfOrder",
+		outputs: [
+			{
+				internalType: "uint256[]",
+				name: "orderIds",
+				type: "uint256[]",
+			},
+		],
+		stateMutability: "nonpayable",
+		type: "function",
+	},
+	{
+		inputs: [
+			{
+				internalType: "uint256",
+				name: "_shipmentId",
+				type: "uint256",
+			},
+		],
+		name: "sign",
+		outputs: [],
+		stateMutability: "nonpayable",
+		type: "function",
+	},
+	{
+		inputs: [],
+		name: "supplyChainContract",
+		outputs: [
+			{
+				internalType: "contract SupplyChain",
+				name: "",
+				type: "address",
 			},
 		],
 		stateMutability: "view",
