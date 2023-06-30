@@ -1,18 +1,25 @@
-const Order = require('../models/orderModel');
+const Order = require("../models/orderModel");
 
 // Create a new order
 exports.createOrder = async (req, res, next) => {
   try {
-    const {product_id, created_date, is_paid, deposit_amount, customer_address, status} = req.body;
+    const {
+      product_id,
+      created_date,
+      is_paid,
+      deposit_amount,
+      customer_address,
+      status,
+    } = req.body;
 
     // Check caller's role (implement your role checking logic here)
 
     const order = new Order({
-      product_id, 
-      created_date, 
-      is_paid, 
-      deposit_amount, 
-      customer_address, 
+      product_id,
+      created_date,
+      is_paid,
+      deposit_amount,
+      customer_address,
       status,
     });
 
@@ -43,7 +50,7 @@ exports.getOrderById = async (req, res, next) => {
     const order = await Order.findById(orderId);
 
     if (!order) {
-      return res.status(404).json({ error: 'Order not found' });
+      return res.status(404).json({ error: "Order not found" });
     }
 
     res.json(order);
@@ -58,19 +65,18 @@ exports.manageOrder = async (req, res, next) => {
     const orderId = req.params.id;
     const { status } = req.body;
 
-
     const allowedStatus = [0, 1, 2, 3, 4, 5];
     //['PENDING', 'SUPPLIED', 'DELIVERING', 'SUCCESS', 'FAILED', 'CANCELLED']
     if (!allowedStatus.includes(status)) {
-      return res.status(400).json({ error: 'Invalid status value' });
+      return res.status(400).json({ error: "Invalid status value" });
     }
 
     if (status === 1) {
-        req.io.emit("message_confirmed_order", "Order confirmed!");
-    } 
-    if (status !== await Order.findById(orderId).status) {
+      req.io.emit("message_confirmed_order", "Order confirmed!");
+    }
+    if (status !== (await Order.findById(orderId).status)) {
       req.io.emit("message_changed_status_order", "Status of order changed!");
-    } 
+    }
 
     const order = await Order.findByIdAndUpdate(
       orderId,
@@ -79,7 +85,7 @@ exports.manageOrder = async (req, res, next) => {
     );
 
     if (!order) {
-      return res.status(404).json({ error: 'Order not found' });
+      return res.status(404).json({ error: "Order not found" });
     }
 
     res.json(order);
@@ -88,11 +94,17 @@ exports.manageOrder = async (req, res, next) => {
   }
 };
 
-
 // Get orders by suppliers, manufacturers, or address
 exports.getOrders = async (req, res, next) => {
   try {
-    const { product_id, created_date, is_paid, deposit_amount, customer_address, status } = req.query;
+    const {
+      product_id,
+      created_date,
+      is_paid,
+      deposit_amount,
+      customer_address,
+      status,
+    } = req.query;
 
     const query = {};
 
@@ -129,22 +141,20 @@ exports.getOrders = async (req, res, next) => {
   }
 };
 
-
-
 // Update an order
 exports.updateOrder = async (req, res, next) => {
   try {
     const orderId = req.params.id;
-    const {suppliers, manufacturers, address, status } = req.body;
+    const { suppliers, manufacturers, address, status } = req.body;
 
     const updatedOrder = await Order.findByIdAndUpdate(
       orderId,
-      {suppliers, manufacturers, address, status },
+      { suppliers, manufacturers, address, status },
       { new: true }
     );
 
     if (!updatedOrder) {
-      return res.status(404).json({ error: 'Order not found' });
+      return res.status(404).json({ error: "Order not found" });
     }
 
     res.json(updatedOrder);
@@ -161,11 +171,32 @@ exports.deleteOrder = async (req, res, next) => {
     const deletedOrder = await Order.findByIdAndDelete(orderId);
 
     if (!deletedOrder) {
-      return res.status(404).json({ error: 'Order not found' });
+      return res.status(404).json({ error: "Order not found" });
     }
 
     res.sendStatus(204);
   } catch (error) {
     next(error);
+  }
+};
+
+exports.getAllOrdersOnChainByAddress = async (req, res) => {
+  try {
+    const chainId = Number(req.params.chainId);
+    const address = String(req.params.address);
+    const response = await Order.find({chainId: chainId}).or([{customer_address: address}, {suppliers_address: address}, {manufacturers_address: address}]);
+    return res.status(200).json({
+      message: "Successful",
+      path: `/${chainId}/${address}`,
+      timestamp: Date.now(),
+      data: response,
+    });
+  } catch (err) {
+    return res.status(500).json({
+      message: "Failed",
+      path: `/${chainId}/${address}`,
+      timestamp: Date.now(),
+      error: err,
+    });
   }
 };

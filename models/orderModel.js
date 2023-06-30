@@ -1,4 +1,4 @@
-const mongoose = require('mongoose');
+const mongoose = require("mongoose");
 
 const orderSchema = new mongoose.Schema({
   order_id: {
@@ -36,9 +36,20 @@ const orderSchema = new mongoose.Schema({
     type: Number,
     required: true,
   },
-
+  suppliers_address: [
+    {
+      type: String,
+      require: true,
+    },
+  ],
+  manufacturers_address: [
+    {
+      type: String,
+      require: true,
+    },
+  ],
 });
 
-const Order = mongoose.model('Order', orderSchema);
+const Order = mongoose.model("Order", orderSchema);
 
 module.exports = Order;

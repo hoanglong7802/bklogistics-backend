@@ -35,9 +35,8 @@ exports.updateProductOnChain = async (req, res) => {
     await Product.deleteMany({});
     products.map((product) => {
       const newProduct = new Product({
-        productId: product.id,
+        id: product.id,
         name: product.name,
-		chainId: 5,
       });
       newProduct.save();
     });
@@ -58,130 +57,113 @@ exports.updateProductOnChain = async (req, res) => {
 };
 
 exports.createProduct = async (req, res, next) => {
-	try {
-		const { name, required_material, description } = req.body;
+  try {
+    const { name, required_material, description } = req.body;
 
-		const product = new Product({
-			name,
-			required_material,
-			description,
-		});
+    const product = new Product({
+      name,
+      required_material,
+      description,
+    });
 
-		const savedProduct = await product.save();
+    const savedProduct = await product.save();
 
-		res.status(201).json(savedProduct);
-	} catch (error) {
-		res.send(error);
-		next(error);
-	}
+    res.status(201).json(savedProduct);
+  } catch (error) {
+    res.send(error);
+    next(error);
+  }
 };
 
 // Get all products
 exports.getAllProducts = async (req, res, next) => {
-	try {
-		const products = await Product.find().exec();
-
-		res.json(products);
-	} catch (error) {
-		next(error);
-	}
-};
-
-// Get a specific product
-exports.getProductById = async (req, res, next) => {
   try {
-	const chainId = req.params.chainId;
-    const productId = req.params.productId;
+    const products = await Product.find().exec();
 
-    // if (!mongoose.Types.ObjectId.isValid(productId)) {
-    //   return res.status(400).json({ error: "Invalid product ID" });
-    // }
-
-    const product = await Product.find().where("chainId").equals(chainId).where("productId", productId);
-		if (!product) {
-			return res.status(404).json({ error: "Product not found" });
-		}
-    return res.json(product);
+    res.json(products);
   } catch (error) {
     next(error);
   }
 };
 
+// Get a specific product
+exports.getProductById = async (req, res, next) => {
+   try {
+     const chainId = req.params.chainId;
+     const productId = req.params.productId;
+     const product = await Product.find()
+       .where("chainId")
+       .equals(chainId)
+       .where("productId", productId);
+     if (!product) {
+       return res.status(404).json({ error: "Product not found" });
+     }
+     res.json(product);
+   } catch (error) {
+     next(error);
+   }
+};
+
 exports.getProducts = async (req, res, next) => {
-	try {
-		// const { name, required_material, description } = req.query;
-		// let query = { chaiId: req.params.chaiId };
+  try {
+    // const { name, required_material, description } = req.query;
+    // let query = { chaiId: req.params.chaiId };
 
-		// if (name) {
-		//   query.name = { $regex: name, $options: "i" };
-		// }
+    // if (name) {
+    //   query.name = { $regex: name, $options: "i" };
+    // }
 
-		// if (required_material) {
-		//   query.material = { $in: [material] };
-		// }
+    // if (required_material) {
+    //   query.material = { $in: [material] };
+    // }
 
-		// if (description) {
-		//   query.description = { $regex: description, $options: "i" };
-		// }
+    // if (description) {
+    //   query.description = { $regex: description, $options: "i" };
+    // }
 
-		const products = await Product.find({});
-		// .where("chainId")
-		// .equals(req.params.chainId);
+    const products = await Product.find().where("chainId").equals(req.params.chainId);
 
-		return res.status(200).json({
-			message: "Successful",
-			products: products,
-			// profile: matchedProfile,
-			timestamp: Date.now(),
-			path: `/products`,
-			method: "GET",
-		});
-	} catch (error) {
-		return res.status(400).json({
-			message: "An error occurred",
-			error: error,
-			timestamp: Date.now(),
-			path: `/products`,
-			method: "GET",
-		});
-	}
+    res.json(products);
+  } catch (error) {
+    next(error);
+  }
 };
 
 // Update a product
 exports.updateProduct = async (req, res, next) => {
-	try {
-		const productId = req.params.id;
-		const { name, required_material, description } = req.body;
+  try {
+    const productId = req.params.id;
+    const { name, required_material, description } = req.body;
 
-		const updatedProduct = await Product.findByIdAndUpdate(
-			productId,
-			{ name, required_material, description },
-			{ new: true }
-		);
+    const updatedProduct = await Product.findByIdAndUpdate(
+      productId,
+      { name, required_material, description },
+      { new: true }
+    );
 
-		if (!updatedProduct) {
-			return res.status(404).json({ error: "Product not found" });
-		}
+    if (!updatedProduct) {
+      return res.status(404).json({ error: "Product not found" });
+    }
 
-		res.json(updatedProduct);
-	} catch (error) {
-		next(error);
-	}
+    res.json(updatedProduct);
+  } catch (error) {
+    next(error);
+  }
 };
 
 // Delete a product
 exports.deleteProduct = async (req, res, next) => {
-	try {
-		const productId = req.params.id;
+  try {
+    const productId = req.params.id;
 
-		const deletedProduct = await Product.findByIdAndDelete(productId);
+    const deletedProduct = await Product.findByIdAndDelete(productId);
 
-		if (!deletedProduct) {
-			return res.status(404).json({ error: "Product not found" });
-		}
+    if (!deletedProduct) {
+      return res.status(404).json({ error: "Product not found" });
+    }
 
-		res.sendStatus(204);
-	} catch (error) {
-		next(error);
-	}
+    res.sendStatus(204);
+  } catch (error) {
+    next(error);
+  }
 };
