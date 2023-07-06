@@ -265,5 +265,6 @@ router.put('/manage/:id', orderController.manageOrder);
 
 // Delete an order
 router.delete('/:id', orderController.deleteOrder);
+router.get('/:chainId/:address', orderController.getAllOrdersOnChainByAddress);
 
 module.exports = router;
