@@ -270,4 +270,7 @@ router.put(
 	profileController.requestRoleRegistration
 );
 
+router.get("/:materialId/suppliers", profileController.getSupplier);
+
+router.get("/:productId/manufacturers", profileController.getManufactures);
 module.exports = router;

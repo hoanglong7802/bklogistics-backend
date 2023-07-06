@@ -2,31 +2,31 @@ const mongoose = require('mongoose');
 
 const shipmentSchema = new mongoose.Schema({
   orderId: {
-    type: mongoose.Schema.Types.ObjectId,
+    type: Number,
     required: true,
   },
   sender: {
-    type: mongoose.Schema.Types.ObjectId,
-    ref: "Profile",
+    type: String,
     required: true,
   },
   carrier: {
-    type: mongoose.Schema.Types.ObjectId,
-    ref: "Profile",
+    type: String,
     required: true,
   },
   receiver: {
-    type: mongoose.Schema.Types.ObjectId,
-    ref: "Profile",
+    type: String,
     required: true,
+  },
+  create_date: {
+    type: Number,
   },
   pickup_date: {
-    type: Date,
-    required: true,
+    type: Number,
+    default: 0,
   },
   delivery_date: {
-    type: Date,
-    required: true,
+    type: Number,
+    default: 0,
   },
   status: {
     type: Number,
@@ -34,9 +34,9 @@ const shipmentSchema = new mongoose.Schema({
     default: 0,
   },
   chainId: {
-		type: Number,
-		required: true,
-	  },
+    type: Number,
+    required: true,
+  },
 });
 
 const Shipment = mongoose.model('Shipment', shipmentSchema);

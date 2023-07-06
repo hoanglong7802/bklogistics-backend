@@ -235,7 +235,7 @@ const shipmentController = require('../controllers/shipmentController');
 const router = express.Router();
 
 // Create a new shipment
-router.post('/', shipmentController.createShipment);
+router.post("/", shipmentController.createNewShipment);
 
 // Get a shipment by query
 router.get('/', shipmentController.getShipments);

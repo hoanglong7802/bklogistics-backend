@@ -123,6 +123,8 @@ exports.updateOrderOnchain = async (req, res) => {
 	const addresses = addressController.getNetworkAddress(chainId);
 	let materialCounter;
 	let orders = [];
+	let suppliers;
+	let manufacturers;
 
 	try {
 		const provider = new ethers.AlchemyProvider(
@@ -139,23 +141,24 @@ exports.updateOrderOnchain = async (req, res) => {
 
 		orderCounter = Number(await supplyChainContract.orderCounter());
 
-		for (var i = 29; i < orderCounter; i++) {
+		for (var i = 1; i < orderCounter; i++) {
+			suppliers = [];
+			manufacturers = [];
 			const response = await supplyChainContract.viewOrder(i);
-			if (Number(response[0]) == 0 || Number(response[0]) == 30) continue;
-			// orders.push({
-			// 	id: Number(response[0]),
-			// 	name: response[1],
-			// 	chainId: chainId,
-			// });
+			if (Number(response[0]) == 0) continue;
+			response[3].map((i) => suppliers.push(String(i)));
+			response[4].map((i) => manufacturers.push(String(i)));
 			let order = {
 				order_id: Number(response[0]),
 				product_id: Number(response[1]),
-				created_date: new Date(Number(response[5])),
+				created_date: new Date(Number(response[5]) * 1000),
 				status: Number(response[6]),
 				is_paid: Number(response[7]),
 				deposit_amount: ethers.formatEther(Number(response[8])),
 				customer_address: response[2],
 				chainId: Number(req.params.chainId),
+				suppliers_address: suppliers,
+				manufacturers_address: manufacturers,
 			};
 			// console.log(order);
 			orders.push(order);
