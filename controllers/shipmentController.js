@@ -36,6 +36,29 @@ exports.createShipment = async (req, res, next) => {
   }
 };
 
+exports.createNewShipment = async (req, res) => {
+  try {
+    const { orderId, sender, carrier, receiver, chainId } = req.body;
+    await Shipment.create({
+      orderId,
+      sender,
+      carrier,
+      receiver,
+      chainId,
+    });
+    // req.io.emit("shipment_create_success", "1");
+    res.status(201).json({
+      orderId,
+      sender,
+      carrier,
+      receiver,
+      chainId,
+    });
+  } catch (error) {
+    console.error(error);
+  }
+};
+
 // Get all shipments
 exports.getAllShipments = async (req, res, next) => {
   try {
@@ -156,9 +179,7 @@ exports.getShipmentOnChain = async (req, res) => {
       signer
     );
     shipmentCounter = Number(await shipmentContract.shipmentCounter());
-    for (var i = 1; i <= shipmentCounter; i++){
-      
-    }
+    for (var i = 1; i <= shipmentCounter; i++) {}
   } catch (err) {
     return res.status(400).json({
       message: "Failed",

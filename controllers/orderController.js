@@ -1,5 +1,8 @@
 const Order = require("../models/orderModel");
-
+const { ProductContractABI } = require("../contract/abis/ProducContractABI");
+const { SupplyChainABI } = require("../contract/abis/SupplyChainABI");
+const addressController = require("../contract/addresses/address");
+const { ethers } = require("ethers");
 // Create a new order
 exports.createOrder = async (req, res, next) => {
   try {
@@ -181,22 +184,78 @@ exports.deleteOrder = async (req, res, next) => {
 };
 
 exports.getAllOrdersOnChainByAddress = async (req, res) => {
-  try {
-    const chainId = Number(req.params.chainId);
-    const address = String(req.params.address);
-    const response = await Order.find({chainId: chainId}).or([{customer_address: address}, {suppliers_address: address}, {manufacturers_address: address}]);
-    return res.status(200).json({
-      message: "Successful",
-      path: `/${chainId}/${address}`,
-      timestamp: Date.now(),
-      data: response,
-    });
-  } catch (err) {
-    return res.status(500).json({
-      message: "Failed",
-      path: `/${chainId}/${address}`,
-      timestamp: Date.now(),
-      error: err,
-    });
+  const chainId = Number(req.params.chainId);
+  const address = String(req.params.address);
+  const addresses = addressController.getNetworkAddress(chainId);
+  let materialCounter;
+  let orders = [];
+  let suppliers;
+  let manufacturers;
+  // try {
+  const provider = new ethers.AlchemyProvider(
+    chainId,
+    `${process.env.GOERLI_PRIVATE_KEY}`
+  );
+  const signer = new ethers.Wallet(process.env.WALLET_PRIVATE_KEY, provider);
+
+  const supplyChainContract = new ethers.Contract(
+    addresses.SUPPLY_CHAIN_CONTRACT_ADDRESS,
+    SupplyChainABI,
+    signer
+  );
+
+  orderCounter = Number(await supplyChainContract.orderCounter());
+
+  for (var i = 1; i <= orderCounter; i++) {
+    suppliers = [];
+    manufacturers = [];
+    const response = await supplyChainContract.viewOrder(i);
+    if (Number(response[0]) == 0) continue;
+    response[3].map((i) => suppliers.push(String(i)));
+    response[4].map((i) => manufacturers.push(String(i)));
+    let order = {
+      order_id: Number(response[0]),
+      product_id: Number(response[1]),
+      created_date: new Date(Number(response[5]) * 1000),
+      status: Number(response[6]),
+      is_paid: Number(response[7]),
+      deposit_amount: ethers.formatEther(Number(response[8])),
+      customer_address: response[2],
+      chainId: Number(req.params.chainId),
+      suppliers_address: suppliers,
+      manufacturers_address: manufacturers,
+    };
+    // console.log(order);
+    orders.push(order);
   }
+  console.log(orders);
+  // await Order.deleteMany({});
+  const response = orders.filter((order) => {
+    // const newOrder = new Order(order);
+    return (
+      order.customer_address === address ||
+      order.manufacturers_address.indexOf(address) !== -1 ||
+      order.suppliers_address.indexOf(address) !== -1
+    );
+    // await newOrder.save();
+  });
+  // const response = await Order.find({ chainId: chainId }).or([
+  //   { customer_address: address },
+  //   { suppliers_address: address },
+  //   { manufacturers_address: address },
+  // ]);
+  return res.status(200).json({
+    message: "Successful",
+    path: `/${chainId}/${address}`,
+    timestamp: Date.now(),
+    data: response,
+  });
+  // } catch (err) {
+  //   return res.status(500).json({
+  //     message: "Failed",
+  //     path: `/${chainId}/${address}`,
+  //     timestamp: Date.now(),
+  //     error: err,
+  //   });
+  // }
 };

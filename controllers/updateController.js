@@ -141,7 +141,7 @@ exports.updateOrderOnchain = async (req, res) => {
 
     orderCounter = Number(await supplyChainContract.orderCounter());
 
-    for (var i = 22; i < orderCounter; i++) {
+    for (var i = 1; i < orderCounter; i++) {
       suppliers = [];
       manufacturers = [];
       const response = await supplyChainContract.viewOrder(i);
