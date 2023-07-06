@@ -139,9 +139,9 @@ exports.updateOrderOnchain = async (req, res) => {
 
 		orderCounter = Number(await supplyChainContract.orderCounter());
 
-		for (var i = 1; i < orderCounter; i++) {
+		for (var i = 29; i < orderCounter; i++) {
 			const response = await supplyChainContract.viewOrder(i);
-			if (Number(response[0]) == 0) continue;
+			if (Number(response[0]) == 0 || Number(response[0]) == 30) continue;
 			// orders.push({
 			// 	id: Number(response[0]),
 			// 	name: response[1],
