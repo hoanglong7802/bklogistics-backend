@@ -236,7 +236,7 @@ const router = express.Router();
 
 // Create a new shipment
 router.post("/", shipmentController.createNewShipment);
-
+router.get('/:chainId/:address', shipmentController.getShipmentOnChainByAddress);
 // Get a shipment by query
 router.get('/', shipmentController.getShipments);
 
