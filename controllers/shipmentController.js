@@ -189,3 +189,31 @@ exports.getShipmentOnChain = async (req, res) => {
     });
   }
 };
+
+exports.getShipmentOnChainByAddress = async (req, res) => {
+  const chainId = Number(req.params.chainId);
+  const address = String(req.params.address);
+  try {
+    const shipments = await Shipment.find().where({chainId: chainId});
+    const response = shipments.filter((shipment) => {
+      return (
+        shipment.carrier === address ||
+        shipment.receiver === address ||
+        shipment.sender === address
+      );
+    });
+    return res.status(200).json({
+      message: "Successful",
+      path: `/${chainId}/${address}`,
+      timestamp: Date.now(),
+      data: response,
+    });
+  } catch (err) {
+    return res.status(500).json({
+      message: "Failed",
+      path: `/${chainId}/${address}`,
+      timestamp: Date.now(),
+      error: err,
+    });
+  }
+};
